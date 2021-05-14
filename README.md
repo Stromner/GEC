@@ -1,0 +1,2 @@
+# GEC
+Game Emulator Collecor
