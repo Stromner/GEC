@@ -1,6 +1,6 @@
-package gec.image;
+package gec.data.image;
 
-import gec.Game;
+import gec.data.Game;
 
 public interface ImageHandler {
     String IMAGE_NAME = "preview.png";

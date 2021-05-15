@@ -1,4 +1,4 @@
-package gec;
+package gec.data;
 
 public enum ConsoleEnum {
     PLAYSTATION_ONE("Playstation 1");

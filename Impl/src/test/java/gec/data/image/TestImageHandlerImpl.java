@@ -1,7 +1,7 @@
-package gec.image;
+package gec.data.image;
 
-import gec.ConsoleEnum;
-import gec.Game;
+import gec.data.ConsoleEnum;
+import gec.data.Game;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
 
-import static gec.image.ImageHandler.IMAGE_NAME;
+import static gec.data.image.ImageHandler.IMAGE_NAME;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)

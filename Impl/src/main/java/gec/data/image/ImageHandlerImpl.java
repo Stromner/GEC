@@ -1,6 +1,6 @@
-package gec.image;
+package gec.data.image;
 
-import gec.Game;
+import gec.data.Game;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

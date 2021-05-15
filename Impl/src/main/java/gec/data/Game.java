@@ -1,4 +1,4 @@
-package gec;
+package gec.data;
 
 public class Game {
     private String gameTitle;
