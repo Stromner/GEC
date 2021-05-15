@@ -1,8 +1,5 @@
 package gec;
 
-import com.linkedin.urls.Url;
-import com.linkedin.urls.detection.UrlDetector;
-import com.linkedin.urls.detection.UrlDetectorOptions;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,7 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class ImageHandlerImpl implements ImageHandler {
@@ -40,26 +38,26 @@ public class ImageHandlerImpl implements ImageHandler {
         try {
             return Jsoup.connect(connectionString).get();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Failed to get page!");
             throw new ImageException("Failed to get page!", e.getCause());
         }
     }
 
-    // TODO This does not work for if the page has ads
     private String getImageUrl(Document document) {
-        Elements matchingElements = document.select("[data-idx=1] .mimg");
+        String cssQuery = "[data-idx = 1]"; // Find first image
+        cssQuery += " ";
+        cssQuery += ".iusc";
+
+        Elements matchingElements = document.select(cssQuery);
         Element element = matchingElements.get(0);
 
-        UrlDetector parser = new UrlDetector(element.toString(), UrlDetectorOptions.Default);
-        List<Url> found = parser.detect();
-        if (found.size() < 1) {
+        Pattern patt = Pattern.compile("https?:\\/\\/tse.\\.mm.bing.net.+?(?=&)");
+        Matcher matcher = patt.matcher(element.toString());
+        if (matcher.find()) {
+            return matcher.group(0);
+        } else {
             log.error("Could not find any image to download!");
             throw new ImageException("Could not find any image to download!");
         }
-
-        String imageUrl = found.get(0).getHost() + found.get(0).getPath();
-        log.debug("Image URL '{}'", imageUrl);
-
-        return imageUrl;
     }
 }

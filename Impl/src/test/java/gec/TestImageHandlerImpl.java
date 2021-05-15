@@ -11,14 +11,14 @@ public class TestImageHandlerImpl {
     private ImageHandlerImpl unitUnderTest;
 
     @Test
-    public void testFindImageUrl_BingWithoutAds(){
+    public void testFindImageUrlBing_WithoutAds() {
         Game game = new Game("Digimon World 1", ConsoleEnum.PLAYSTATION_ONE);
         unitUnderTest.downloadImage(game);
         // TODO extend test scenario: Check for image, then delete it
     }
 
     @Test
-    public void testFindImageUrl_BingWithAds(){
+    public void testFindImageUrlBing_WithAds() {
         Game game = new Game("Final Fantasy 7", ConsoleEnum.PLAYSTATION_ONE);
         unitUnderTest.downloadImage(game);
         // TODO extend test scenario: Check for image, then delete it
