@@ -1,6 +1,6 @@
 package gec.data.image;
 
-import gec.data.Game;
+import gec.data.GameMetaData;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -25,8 +25,8 @@ public class ImageHandlerImpl implements ImageHandler {
     }
 
     @Override
-    public void downloadImage(Game game) {
-        String imageUrl = getImageUrl(getDataFromBing(game));
+    public void downloadImage(GameMetaData gameMetaData) {
+        String imageUrl = getImageUrl(getDataFromBing(gameMetaData));
 
         try {
             URL url = new URL(imageUrl);
@@ -39,11 +39,11 @@ public class ImageHandlerImpl implements ImageHandler {
         }
     }
 
-    private Document getDataFromBing(Game game) {
+    private Document getDataFromBing(GameMetaData gameMetaData) {
         String connectionString = "https://www.bing.com/images/search?q=";
-        connectionString += game.getGameTitle();
+        connectionString += gameMetaData.getGameTitle();
         connectionString += "+";
-        connectionString += game.getConsole().getConsoleName();
+        connectionString += gameMetaData.getConsole().getConsoleName();
         connectionString += "&form=HDRSC2";
         connectionString = connectionString.replace(" ", "+"); // Failsafe if space in Game.java properties
 

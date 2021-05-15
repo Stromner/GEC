@@ -1,10 +1,10 @@
 package gec.data;
 
-public class Game {
+public class GameMetaData {
     private String gameTitle;
     private ConsoleEnum console;
 
-    public Game(String gameTitle, ConsoleEnum console) {
+    public GameMetaData(String gameTitle, ConsoleEnum console) {
         this.gameTitle = gameTitle;
         this.console = console;
     }

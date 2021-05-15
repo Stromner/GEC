@@ -1,7 +1,7 @@
 package gec.data.image;
 
 import gec.data.ConsoleEnum;
-import gec.data.Game;
+import gec.data.GameMetaData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,15 +33,15 @@ public class TestImageHandlerImpl {
 
     @Test
     public void testFindImageUrlBing_WithoutAds() {
-        Game game = new Game("Digimon World 1", ConsoleEnum.PLAYSTATION_ONE);
-        unitUnderTest.downloadImage(game);
+        GameMetaData gameMetaData = new GameMetaData("Digimon World 1", ConsoleEnum.PLAYSTATION_ONE);
+        unitUnderTest.downloadImage(gameMetaData);
         assertTrue(file.exists());
     }
 
     @Test
     public void testFindImageUrlBing_WithAds() {
-        Game game = new Game("Final Fantasy 7", ConsoleEnum.PLAYSTATION_ONE);
-        unitUnderTest.downloadImage(game);
+        GameMetaData gameMetaData = new GameMetaData("Final Fantasy 7", ConsoleEnum.PLAYSTATION_ONE);
+        unitUnderTest.downloadImage(gameMetaData);
         assertTrue(file.exists());
     }
 
