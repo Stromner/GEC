@@ -3,7 +3,6 @@ package gec.data.image;
 import gec.data.ConsoleEnum;
 import gec.data.GameMetaData;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,11 +19,6 @@ public class TestImageHandlerImpl {
 
     @InjectMocks
     private ImageHandlerImpl unitUnderTest;
-
-    @BeforeEach
-    public void beforeEach() {
-        file = new File(IMAGE_NAME);
-    }
 
     @AfterEach
     public void afterEach() {
@@ -46,6 +40,7 @@ public class TestImageHandlerImpl {
     }
 
     private void cleanUpCreatedFile() {
+        file = new File(IMAGE_NAME);
         assertTrue(file.delete());
     }
 }
