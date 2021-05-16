@@ -1,27 +1,28 @@
 package gec.ui;
 
-import org.springframework.beans.factory.annotation.Value;
+import gec.ui.components.panels.ContentPanel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.swing.*;
-import java.awt.*;
-import java.util.List;
 
 @Component
 @ConditionalOnProperty(name = "program.live.boot")
 public class ApplicationWindow {
     private JFrame frame;
-    @Value("#{'${supported.games}'.split(',')}")
-    private List<String> consoleList;
+    @Autowired
+    private ContentPanel contentPanel;
 
     @PostConstruct
     public void init() {
         createFrame();
 
         frame.setVisible(true);
+        frame.setContentPane(contentPanel);
     }
+
     private void createFrame() {
         frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -35,7 +36,6 @@ public class ApplicationWindow {
     private void configureFrame() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            frame.getContentPane().setBackground(Color.BLACK);
 
             SwingUtilities.updateComponentTreeUI(frame);
         } catch (Exception e) {
