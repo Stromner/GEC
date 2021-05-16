@@ -19,7 +19,7 @@ public class TitlePanel extends JPanel {
 
     @PostConstruct
     private void init() {
-        menu.init(consoleList);
+        menu.init(consoleList, new GridLayout(0,1));
         this.add(menu);
 
         this.setBackground(Color.BLACK);

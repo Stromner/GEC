@@ -13,6 +13,7 @@ public class MenuLabel extends JLabel {
         isSelected = false;
         this.setForeground(Color.WHITE);
         this.setFont(DEFAULT_FONT_SIZE);
+        this.setAlignmentX(0.5f);
     }
 
     public void toggleSelected() {

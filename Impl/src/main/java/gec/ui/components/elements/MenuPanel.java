@@ -24,7 +24,7 @@ public class MenuPanel extends JPanel {
         menuLabelList = new ArrayList<>();
     }
 
-    public void init(List<String> itemList) {
+    public void init(List<String> itemList, LayoutManager layoutManager) {
         this.itemList = itemList;
         if (itemList.size() == 0) {
             log.error("No supported consoles found!");
@@ -36,6 +36,7 @@ public class MenuPanel extends JPanel {
 
         createPanel();
         setKeyBindings();
+        this.setLayout(layoutManager);
     }
 
     private void createPanel() {
@@ -43,8 +44,8 @@ public class MenuPanel extends JPanel {
         for (String console : itemList) {
             MenuLabel menuLabel = new MenuLabel(console);
             menuLabelList.add(menuLabel);
-            this.add(menuLabel);
         }
+        reorderMenuItems();
         menuLabelList.get(startIndex).toggleSelected();
     }
 
@@ -59,6 +60,17 @@ public class MenuPanel extends JPanel {
 
         actionMap.put(vkUp, new KeyAction(vkUp, this::decreaseIndex));
         actionMap.put(vkDown, new KeyAction(vkDown, this::increaseIndex));
+    }
+
+    private void reorderMenuItems(){
+        removeAll();
+        add(menuLabelList.get(endIndex));
+        int index = endIndex;
+        index = increaseIndex(index);
+        while(index!=endIndex){
+            add(menuLabelList.get(index));
+            index = increaseIndex(index);
+        }
     }
 
     private void handleKeyPressed(Function<Integer, Integer> indexCalculator) {
@@ -87,6 +99,7 @@ public class MenuPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent actionEvt) {
             handleKeyPressed(indexCalculator);
+            reorderMenuItems();
         }
     }
 }
