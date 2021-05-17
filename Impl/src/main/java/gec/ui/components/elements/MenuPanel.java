@@ -1,12 +1,12 @@
 package gec.ui.components.elements;
 
+import gec.ui.actions.KeyAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,19 +58,25 @@ public class MenuPanel extends JPanel {
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), vkUp);
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), vkDown);
 
-        actionMap.put(vkUp, new KeyAction(vkUp, this::decreaseIndex));
-        actionMap.put(vkDown, new KeyAction(vkDown, this::increaseIndex));
+        actionMap.put(vkUp, new KeyAction(vkUp, aVoid -> switchMenuItem(this::decreaseIndex)));
+        actionMap.put(vkDown, new KeyAction(vkDown, aVoid -> switchMenuItem(this::increaseIndex)));
     }
 
-    private void reorderMenuItems(){
+    private void reorderMenuItems() {
         removeAll();
         add(menuLabelList.get(endIndex));
         int index = endIndex;
         index = increaseIndex(index);
-        while(index!=endIndex){
+        while (index != endIndex) {
             add(menuLabelList.get(index));
             index = increaseIndex(index);
         }
+    }
+
+    private Void switchMenuItem(Function<Integer, Integer> indexCalculator) {
+        handleKeyPressed(indexCalculator);
+        reorderMenuItems();
+        return null;
     }
 
     private void handleKeyPressed(Function<Integer, Integer> indexCalculator) {
@@ -86,20 +92,5 @@ public class MenuPanel extends JPanel {
 
     private int increaseIndex(int index) {
         return index++ >= menuLabelList.size() - 1 ? 0 : index++;
-    }
-
-    private class KeyAction extends AbstractAction {
-        private final Function<Integer, Integer> indexCalculator;
-
-        public KeyAction(String actionCommand, Function<Integer, Integer> indexCalculator) {
-            this.indexCalculator = indexCalculator;
-            putValue(ACTION_COMMAND_KEY, actionCommand);
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent actionEvt) {
-            handleKeyPressed(indexCalculator);
-            reorderMenuItems();
-        }
     }
 }
