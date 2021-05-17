@@ -1,4 +1,4 @@
-package gec.data.image;
+package gec.core.exceptions;
 
 public class ImageException extends RuntimeException {
     public ImageException(String message) {
