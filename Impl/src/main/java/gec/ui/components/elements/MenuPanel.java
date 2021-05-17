@@ -1,8 +1,11 @@
 package gec.ui.components.elements;
 
+import gec.core.events.ConsoleSelectedEvent;
 import gec.ui.actions.KeyAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
@@ -19,6 +22,8 @@ public class MenuPanel extends JPanel {
     private List<String> itemList;
     private int startIndex;
     private int endIndex;
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     public MenuPanel() {
         menuLabelList = new ArrayList<>();
@@ -55,11 +60,14 @@ public class MenuPanel extends JPanel {
 
         String vkUp = "VK_UP";
         String vkDown = "VK_DOWN";
+        String vkEnter = "ENTER";
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), vkUp);
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), vkDown);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), vkEnter);
 
         actionMap.put(vkUp, new KeyAction(vkUp, aVoid -> switchMenuItem(this::decreaseIndex)));
         actionMap.put(vkDown, new KeyAction(vkDown, aVoid -> switchMenuItem(this::increaseIndex)));
+        actionMap.put(vkEnter, new KeyAction(vkEnter, aVoid -> selectConsole()));
     }
 
     private void reorderMenuItems() {
@@ -92,5 +100,11 @@ public class MenuPanel extends JPanel {
 
     private int increaseIndex(int index) {
         return index++ >= menuLabelList.size() - 1 ? 0 : index++;
+    }
+
+    private Void selectConsole(){
+        log.debug("Selected console '{}'", itemList.get(startIndex));
+        eventPublisher.publishEvent(new ConsoleSelectedEvent(this, itemList.get(startIndex)));
+        return null;
     }
 }
