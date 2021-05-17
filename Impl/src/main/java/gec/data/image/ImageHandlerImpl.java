@@ -1,5 +1,6 @@
 package gec.data.image;
 
+import gec.core.exceptions.ImageException;
 import gec.data.GameMetaData;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
