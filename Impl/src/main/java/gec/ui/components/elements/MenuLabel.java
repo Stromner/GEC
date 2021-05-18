@@ -4,15 +4,18 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MenuLabel extends JLabel {
-    public static final Font DEFAULT_FONT_SIZE = new Font("Serif", Font.BOLD, 70);
-    public static final Font SELECTED_FONT_SIZE = new Font("Serif", Font.BOLD, 100);
+    private Font defaultFontSize;
+    private Font selectedFontSize;
     private boolean isSelected;
 
-    public MenuLabel(String data) {
+    public MenuLabel(String data, Font defaultFontSize, Font selectedFontSize) {
         super(data);
+        this.defaultFontSize = defaultFontSize;
+        this.selectedFontSize = selectedFontSize;
+
         isSelected = false;
         this.setForeground(Color.WHITE);
-        this.setFont(DEFAULT_FONT_SIZE);
+        this.setFont(defaultFontSize);
         this.setAlignmentX(0.5f);
         this.setHorizontalAlignment(SwingConstants.CENTER);
     }
@@ -20,6 +23,6 @@ public class MenuLabel extends JLabel {
     public void toggleSelected() {
         isSelected = !isSelected;
 
-        this.setFont(isSelected ? SELECTED_FONT_SIZE : DEFAULT_FONT_SIZE);
+        this.setFont(isSelected ? selectedFontSize : defaultFontSize);
     }
 }

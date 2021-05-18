@@ -12,6 +12,8 @@ import java.util.List;
 
 @Component
 public class TitlePanel extends JPanel {
+    private Font defaultFontSize = new Font("Serif", Font.BOLD, 60);
+    private Font selectedFontSize = new Font("Serif", Font.BOLD, 100);
     @Value("#{'${supported.games}'.split(',')}")
     private List<String> consoleList;
     @Autowired
@@ -19,7 +21,7 @@ public class TitlePanel extends JPanel {
 
     @PostConstruct
     private void init() {
-        menu.init(consoleList, new GridLayout(0,1));
+        menu.init(defaultFontSize, selectedFontSize, consoleList, new GridLayout(0, 1));
         this.add(menu);
 
         this.setBackground(Color.BLACK);

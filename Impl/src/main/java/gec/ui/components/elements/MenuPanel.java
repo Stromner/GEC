@@ -29,7 +29,7 @@ public class MenuPanel extends JPanel {
         menuLabelList = new ArrayList<>();
     }
 
-    public void init(List<String> itemList, LayoutManager layoutManager) {
+    public void init(Font defaultFontSize, Font selectedFontSize, List<String> itemList, LayoutManager layoutManager) {
         this.itemList = itemList;
         if (itemList.size() == 0) {
             log.error("No supported consoles found!");
@@ -39,15 +39,15 @@ public class MenuPanel extends JPanel {
         startIndex = 0;
         endIndex = itemList.size() - 1;
 
-        createPanel();
+        createPanel(defaultFontSize, selectedFontSize);
         setKeyBindings();
         this.setLayout(layoutManager);
     }
 
-    private void createPanel() {
+    private void createPanel(Font defaultFontSize, Font selectedFontSize) {
         this.setBackground(Color.BLACK);
         for (String console : itemList) {
-            MenuLabel menuLabel = new MenuLabel(console);
+            MenuLabel menuLabel = new MenuLabel(console, defaultFontSize, selectedFontSize);
             menuLabelList.add(menuLabel);
         }
         reorderMenuItems();
@@ -102,7 +102,7 @@ public class MenuPanel extends JPanel {
         return index++ >= menuLabelList.size() - 1 ? 0 : index++;
     }
 
-    private Void selectConsole(){
+    private Void selectConsole() {
         log.debug("Selected console '{}'", itemList.get(startIndex));
         eventPublisher.publishEvent(new ConsoleSelectedEvent(this, itemList.get(startIndex)));
         return null;
