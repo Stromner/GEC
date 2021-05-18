@@ -1,6 +1,6 @@
 package gec.data.image;
 
-import gec.data.ConsoleEnum;
+import gec.core.ConsoleEnum;
 import gec.data.GameMetaData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;

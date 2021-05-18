@@ -1,5 +1,6 @@
 package gec.ui.components.elements;
 
+import gec.core.ConsoleEnum;
 import gec.core.events.ConsoleSelectedEvent;
 import gec.ui.actions.KeyAction;
 import org.slf4j.Logger;
@@ -104,7 +105,7 @@ public class MenuPanel extends JPanel {
 
     private Void selectConsole() {
         log.debug("Selected console '{}'", itemList.get(startIndex));
-        eventPublisher.publishEvent(new ConsoleSelectedEvent(this, itemList.get(startIndex)));
+        eventPublisher.publishEvent(new ConsoleSelectedEvent(this, ConsoleEnum.get(itemList.get(startIndex))));
         return null;
     }
 }

@@ -1,5 +1,7 @@
 package gec.data;
 
+import gec.core.ConsoleEnum;
+
 public class GameMetaData {
     private String gameTitle;
     private ConsoleEnum console;
