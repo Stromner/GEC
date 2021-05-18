@@ -16,8 +16,6 @@ public class MenuLabel extends JLabel {
         isSelected = false;
         this.setForeground(Color.WHITE);
         this.setFont(defaultFontSize);
-        this.setAlignmentX(0.5f);
-        this.setHorizontalAlignment(SwingConstants.CENTER);
     }
 
     public void toggleSelected() {

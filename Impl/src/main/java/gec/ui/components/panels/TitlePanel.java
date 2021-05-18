@@ -25,7 +25,7 @@ public class TitlePanel extends JPanel {
                 .map(ConsoleEnum::getConsoleName)
                 .collect(Collectors.toList());
 
-        menu.init(defaultFontSize, selectedFontSize, enumList, new GridLayout(0, 1));
+        menu.init(defaultFontSize, selectedFontSize, enumList, SwingConstants.CENTER);
         this.add(menu);
 
         this.setBackground(Color.BLACK);

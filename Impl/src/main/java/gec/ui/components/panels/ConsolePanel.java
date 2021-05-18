@@ -33,7 +33,7 @@ public class ConsolePanel extends JPanel {
 
     private void createPanel() {
         MenuPanel menu = new MenuPanel();
-        menu.init(defaultFontSize, selectedFontSize, gameList, new GridLayout(0, 1));
+        menu.init(defaultFontSize, selectedFontSize, gameList, SwingConstants.LEFT);
         this.add(menu);
         this.setBackground(Color.BLACK);
     }

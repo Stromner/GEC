@@ -30,25 +30,26 @@ public class MenuPanel extends JPanel {
         menuLabelList = new ArrayList<>();
     }
 
-    public void init(Font defaultFontSize, Font selectedFontSize, List<String> itemList, LayoutManager layoutManager) {
+    public void init(Font defaultFontSize, Font selectedFontSize, List<String> itemList, int menuAlignment) {
         this.itemList = itemList;
         if (itemList.size() == 0) {
-            log.error("No supported consoles found!");
-            throw new RuntimeException("No supported consoles found!");
+            log.error("List of items is empty!");
+            throw new RuntimeException("List of items is empty!"); // TODO Graceful error to UI?
         }
 
         startIndex = 0;
         endIndex = itemList.size() - 1;
 
-        createPanel(defaultFontSize, selectedFontSize);
+        createPanel(defaultFontSize, selectedFontSize, menuAlignment);
         setKeyBindings();
-        this.setLayout(layoutManager);
+        this.setLayout(new GridLayout(0, 1));
     }
 
-    private void createPanel(Font defaultFontSize, Font selectedFontSize) {
+    private void createPanel(Font defaultFontSize, Font selectedFontSize, int menuAlignment) {
         this.setBackground(Color.BLACK);
         for (String console : itemList) {
             MenuLabel menuLabel = new MenuLabel(console, defaultFontSize, selectedFontSize);
+            menuLabel.setHorizontalAlignment(menuAlignment);
             menuLabelList.add(menuLabel);
         }
         reorderMenuItems();
