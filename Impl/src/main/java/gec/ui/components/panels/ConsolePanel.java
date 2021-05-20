@@ -2,9 +2,9 @@ package gec.ui.components.panels;
 
 import gec.core.ConsoleEnum;
 import gec.core.FileHandler;
+import gec.ui.components.elements.GECPanel;
 import gec.ui.components.elements.MenuPanel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ResourceLoader;
+import gec.ui.utils.GridBagUtil;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
@@ -12,9 +12,7 @@ import java.awt.*;
 import java.util.List;
 
 @Component
-public class ConsolePanel extends JPanel {
-    @Autowired
-    ResourceLoader resourceLoader;
+public class ConsolePanel extends GECPanel {
     private Font defaultFontSize = new Font("Serif", Font.BOLD, 12);
     private Font selectedFontSize = new Font("Serif", Font.BOLD, 18);
     private ConsoleEnum selectedConsole;

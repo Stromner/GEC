@@ -1,16 +1,15 @@
 package gec.ui.components.panels;
 
 import gec.core.events.ConsoleSelectedEvent;
+import gec.ui.components.elements.GECPanel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.swing.*;
-import java.awt.*;
 
 @Component
-public class ContentPanel extends JPanel {
+public class ContentPanel extends GECPanel {
     @Autowired
     TitlePanel titlePanel;
     @Autowired
@@ -18,7 +17,6 @@ public class ContentPanel extends JPanel {
 
     @PostConstruct
     private void init() {
-        this.setBackground(Color.BLACK);
         this.add(titlePanel);
     }
 

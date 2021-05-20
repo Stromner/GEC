@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.function.Function;
 
 @Component
-public class MenuPanel extends JPanel {
+public class MenuPanel extends GECPanel {
     private static final Logger log = LoggerFactory.getLogger(MenuPanel.class);
     private final List<MenuLabel> menuLabelList;
     private List<String> itemList;
@@ -46,7 +46,6 @@ public class MenuPanel extends JPanel {
     }
 
     private void createPanel(Font defaultFontSize, Font selectedFontSize, int menuAlignment) {
-        this.setBackground(Color.BLACK);
         for (String console : itemList) {
             MenuLabel menuLabel = new MenuLabel(console, defaultFontSize, selectedFontSize);
             menuLabel.setHorizontalAlignment(menuAlignment);

@@ -1,6 +1,7 @@
 package gec.ui.components.panels;
 
 import gec.core.ConsoleEnum;
+import gec.ui.components.elements.GECPanel;
 import gec.ui.components.elements.MenuPanel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
-public class TitlePanel extends JPanel {
+public class TitlePanel extends GECPanel {
     private Font defaultFontSize = new Font("Serif", Font.BOLD, 60);
     private Font selectedFontSize = new Font("Serif", Font.BOLD, 100);
     @Autowired
@@ -27,7 +28,5 @@ public class TitlePanel extends JPanel {
 
         menu.init(defaultFontSize, selectedFontSize, enumList, SwingConstants.CENTER);
         this.add(menu);
-
-        this.setBackground(Color.BLACK);
     }
 }
