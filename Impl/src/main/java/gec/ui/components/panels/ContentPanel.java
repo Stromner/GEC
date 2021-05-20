@@ -7,6 +7,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.awt.*;
 
 @Component
 public class ContentPanel extends GECPanel {
@@ -17,6 +18,7 @@ public class ContentPanel extends GECPanel {
 
     @PostConstruct
     private void init() {
+        this.setLayout(new GridLayout(1,1));
         this.add(titlePanel);
     }
 
