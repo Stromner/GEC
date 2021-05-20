@@ -3,59 +3,66 @@ package gec.ui.utils.builders;
 import java.awt.*;
 
 public class GridBagConstraintsBuilder {
-    private final GridBagConstraints constraints;
 
-    public GridBagConstraintsBuilder() {
-        constraints = new GridBagConstraints();
+    private GridBagConstraintsBuilder() {
     }
 
-    public GridBagConstraintsBuilder withGridHeight(int gridHeight) {
-        constraints.gridheight = gridHeight;
-        return this;
-    }
+    public static class Builder {
+        private final GridBagConstraints constraints = new GridBagConstraints();
 
-    public GridBagConstraintsBuilder withGridWidth(int gridWidth) {
-        constraints.gridwidth = gridWidth;
-        return this;
-    }
+        public Builder withGridHeight(int gridHeight) {
+            constraints.gridheight = gridHeight;
+            return this;
+        }
 
-    public GridBagConstraintsBuilder withFill(int fill) {
-        constraints.fill = fill;
-        return this;
-    }
+        public Builder withGridWidth(int gridWidth) {
+            constraints.gridwidth = gridWidth;
+            return this;
+        }
 
-    public GridBagConstraintsBuilder withDefaultPadding() {
-        constraints.insets = new Insets(10, 10, 10, 10);
-        return this;
-    }
+        public Builder withFill(int fill) {
+            constraints.fill = fill;
+            return this;
+        }
 
-    public GridBagConstraintsBuilder withDefaultWidthPadding() {
-        constraints.insets = new Insets(0, 10, 0, 10);
-        return this;
-    }
+        public Builder withDefaultPadding() {
+            constraints.insets = new Insets(10, 10, 10, 10);
+            return this;
+        }
 
-    public GridBagConstraintsBuilder withDefaultHeightPadding() {
-        constraints.insets = new Insets(10, 0, 10, 0);
-        return this;
-    }
+        public Builder withDefaultWidthPadding() {
+            constraints.insets = new Insets(0, 10, 0, 10);
+            return this;
+        }
 
-    public GridBagConstraintsBuilder withWeightX(int weightX) {
-        constraints.weightx = weightX;
-        return this;
-    }
+        public Builder withDefaultHeightPadding() {
+            constraints.insets = new Insets(10, 0, 10, 0);
+            return this;
+        }
 
-    public GridBagConstraintsBuilder withWeightY(int weightY) {
-        constraints.weighty = weightY;
-        return this;
-    }
+        public Builder withWeightX(double weightX) {
+            constraints.weightx = weightX;
+            return this;
+        }
 
-    public GridBagConstraintsBuilder withFillOutWeight() {
-        constraints.weightx = 1;
-        constraints.weighty = 1;
-        return this;
-    }
+        public Builder withWeightY(double weightY) {
+            constraints.weighty = weightY;
+            return this;
+        }
 
-    public GridBagConstraints build() {
-        return constraints;
+        public Builder withAnchor(int anchor) {
+            constraints.anchor = anchor;
+            return this;
+        }
+
+        public Builder withFillOutWeight() {
+            constraints.weightx = 1;
+            constraints.weighty = 1;
+            return this;
+        }
+
+        public GridBagConstraints build() {
+            return constraints;
+        }
     }
 }
