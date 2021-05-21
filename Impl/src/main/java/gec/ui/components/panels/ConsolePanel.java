@@ -4,7 +4,7 @@ import gec.core.ConsoleEnum;
 import gec.core.FileHandler;
 import gec.ui.components.elements.GECPanel;
 import gec.ui.components.elements.MenuPanel;
-import gec.ui.components.elements.RelativeLayout;
+import gec.ui.layouts.RelativeLayout;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;

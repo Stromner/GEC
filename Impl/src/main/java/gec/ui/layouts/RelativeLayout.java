@@ -1,4 +1,4 @@
-package gec.ui.components.elements;
+package gec.ui.layouts;
 
 import java.awt.*;
 import java.util.*;
