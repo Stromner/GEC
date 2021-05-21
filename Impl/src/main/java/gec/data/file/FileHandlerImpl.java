@@ -1,14 +1,18 @@
 package gec.data.file;
 
 import gec.core.ConsoleEnum;
+import gec.ui.components.panels.ConsolePanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.net.URL;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,8 +34,42 @@ public class FileHandlerImpl implements FileHandler {
     }
 
     @Override
+    public String getRootPath() {
+        return rootPath;
+    }
+
+    @Override
     public List<String> getConsoleList() {
         return consoleList;
+    }
+
+    @Override
+    public boolean fileExists(String absoluteFilePath) {
+        return new File(absoluteFilePath).exists();
+    }
+
+    @Override
+    public List<String> readLinesFromFile(String filePath) {
+        URL url = ConsolePanel.class.getClassLoader().getResource(filePath);
+        List<String> list = new ArrayList<>();
+
+        try {
+            Scanner s = new Scanner(new File(url.toURI()));
+            while (s.hasNextLine()) {
+                String row = s.nextLine();
+                // Ignore comment rows
+                if (row.charAt(0) == '#') {
+                    continue;
+                }
+                list.add(row);
+            }
+            s.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // TODO Publish new type of error event
+        }
+
+        return list;
     }
 
     private void createFolderStructure() {

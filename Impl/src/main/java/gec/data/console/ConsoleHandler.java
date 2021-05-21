@@ -8,5 +8,5 @@ public interface ConsoleHandler {
 
     List<String> getGameList();
 
-    BufferedImage getGamePreviewImage(String game);
+    BufferedImage getGamePreviewImage(String gameTitle);
 }

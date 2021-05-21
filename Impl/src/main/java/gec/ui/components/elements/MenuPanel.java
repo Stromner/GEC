@@ -1,8 +1,13 @@
 package gec.ui.components.elements;
 
+import gec.core.events.MenuChangeEvent;
 import gec.ui.actions.KeyAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
@@ -13,12 +18,15 @@ import java.util.List;
 import java.util.function.Function;
 
 @Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class MenuPanel extends GECPanel {
     private static final Logger log = LoggerFactory.getLogger(MenuPanel.class);
     private final List<MenuLabel> menuLabelList;
     private List<String> itemList;
     private int startIndex;
     private int endIndex;
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     public MenuPanel() {
         menuLabelList = new ArrayList<>();
@@ -39,7 +47,7 @@ public class MenuPanel extends GECPanel {
         setKeyBindings();
     }
 
-    public String getSelectedItem(){
+    public String getSelectedItem() {
         return itemList.get(startIndex);
     }
 
@@ -80,6 +88,7 @@ public class MenuPanel extends GECPanel {
     private Void switchMenuItem(Function<Integer, Integer> indexCalculator) {
         handleKeyPressed(indexCalculator);
         reorderMenuItems();
+        eventPublisher.publishEvent(new MenuChangeEvent(this, startIndex));
         return null;
     }
 

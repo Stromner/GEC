@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.regex.Matcher;
@@ -26,14 +25,12 @@ public class ImageHandlerImpl implements ImageHandler {
     }
 
     @Override
-    public void downloadImage(GameMetaData gameMetaData) {
+    public BufferedImage downloadImage(GameMetaData gameMetaData) {
         String imageUrl = getImageUrl(getDataFromBing(gameMetaData));
 
         try {
             URL url = new URL(imageUrl);
-            BufferedImage image = ImageIO.read(url);
-
-            ImageIO.write(image, "png", new File(IMAGE_NAME)); // TODO This needs to go into a unique directory for console+game, would also be useful for tests so files are created in the test structure instead
+            return ImageIO.read(url);
         } catch (IOException e) {
             log.error("Failed to download image '{}'", imageUrl);
             throw new ImageException("Failed to download image!", e);
