@@ -4,7 +4,7 @@ import gec.core.ConsoleEnum;
 import gec.core.FileHandler;
 import gec.ui.components.elements.GECPanel;
 import gec.ui.components.elements.MenuPanel;
-import gec.ui.utils.GridBagUtil;
+import gec.ui.components.elements.RelativeLayout;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
@@ -25,14 +25,31 @@ public class ConsolePanel extends GECPanel {
         gameListPath = selectedConsole.getConsoleName() + ".txt";
 
         gameList = FileHandler.readLinesFromFile(gameListPath);
-        createPanel();
 
+        this.setLayout(new GridBagLayout());
+        createPanel();
     }
 
     private void createPanel() {
+        var layout = new RelativeLayout(RelativeLayout.X_AXIS);
+        layout.setFill(true);
+        layout.setAlignment(RelativeLayout.LEADING);
+        this.setLayout(layout);
+
+        createMenuPanel();
+        this.add(new JSeparator(SwingConstants.VERTICAL));
+        // TODO Code for preview image
+        // TODO Separator between these two? Boarder?
+        // TODO Code for "menu" below preview image
+    }
+
+    private void createMenuPanel() {
+        GECPanel menuPanel = new GECPanel();
+
         MenuPanel menu = new MenuPanel();
-        menu.init(defaultFontSize, selectedFontSize, gameList, SwingConstants.LEFT);
-        this.add(menu);
-        this.setBackground(Color.BLACK);
+        menu.init(defaultFontSize, selectedFontSize, gameList, SwingConstants.LEADING);
+        menuPanel.add(menu);
+
+        this.add(menuPanel, Float.valueOf(3));
     }
 }

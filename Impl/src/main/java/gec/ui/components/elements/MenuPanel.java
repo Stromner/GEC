@@ -40,9 +40,9 @@ public class MenuPanel extends GECPanel {
         startIndex = 0;
         endIndex = itemList.size() - 1;
 
+        this.setLayout(new GridLayout(0, 1));
         createPanel(defaultFontSize, selectedFontSize, menuAlignment);
         setKeyBindings();
-        this.setLayout(new GridLayout(0, 1));
     }
 
     private void createPanel(Font defaultFontSize, Font selectedFontSize, int menuAlignment) {
