@@ -2,6 +2,7 @@ package gec.ui.components.panels;
 
 import gec.core.ConsoleEnum;
 import gec.core.events.ConsoleSelectedEvent;
+import gec.data.file.FileHandler;
 import gec.ui.actions.KeyAction;
 import gec.ui.components.elements.GECPanel;
 import gec.ui.components.elements.MenuPanel;
@@ -15,9 +16,6 @@ import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 public class TitlePanel extends GECPanel {
@@ -25,17 +23,17 @@ public class TitlePanel extends GECPanel {
     private Font defaultFontSize = new Font("Serif", Font.BOLD, 60);
     private Font selectedFontSize = new Font("Serif", Font.BOLD, 100);
     @Autowired
-    MenuPanel menu;
+    private FileHandler fileHandler;
+    @Autowired
+    private MenuPanel menu;
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
     @PostConstruct
     private void init() {
-        List<String> enumList = Stream.of(ConsoleEnum.values())
-                .map(ConsoleEnum::getConsoleName)
-                .collect(Collectors.toList());
+        fileHandler.initFileStructure();
 
-        menu.init(defaultFontSize, selectedFontSize, enumList, SwingConstants.CENTER);
+        menu.init(defaultFontSize, selectedFontSize, fileHandler.getConsoleList(), SwingConstants.CENTER);
         setKeyBindings();
         this.add(menu);
     }

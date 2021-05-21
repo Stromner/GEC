@@ -1,0 +1,55 @@
+package gec.data.file;
+
+import gec.core.ConsoleEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+@Component
+public class FileHandlerImpl implements FileHandler {
+    private static final Logger log = LoggerFactory.getLogger(FileHandlerImpl.class);
+    private static final String ROOT_FOLDER_NAME = "GEC";
+    @Value("${custom.root.location}")
+    private String rootPath;
+    private List<String> consoleList;
+
+    @Override
+    public void initFileStructure() {
+        consoleList = Stream.of(ConsoleEnum.values())
+                .map(ConsoleEnum::getConsoleName)
+                .collect(Collectors.toList());
+
+        createFolderStructure();
+    }
+
+    @Override
+    public List<String> getConsoleList() {
+        return consoleList;
+    }
+
+    private void createFolderStructure() {
+        // Create root
+        rootPath += rootPath.isEmpty() ? Path.of("").toAbsolutePath() : ROOT_FOLDER_NAME;
+        createFolder(rootPath);
+
+        // Create console folders
+        for (String console : consoleList) {
+            createFolder(rootPath + "/" + console);
+        }
+    }
+
+    private void createFolder(String path) {
+        File dir = new File(path);
+        if (!dir.exists()) {
+            log.debug("Creating folder at '{}'", path);
+            dir.mkdirs();
+        }
+    }
+}
