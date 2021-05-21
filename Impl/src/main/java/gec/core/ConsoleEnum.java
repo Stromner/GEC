@@ -9,26 +9,27 @@ public enum ConsoleEnum {
     NINTENDO_64("Nintendo 64"),
     SNES("SNES");
 
-    private String consoleName;
-    private static final Map<String,ConsoleEnum> ENUM_MAP;
+    private static final Map<String, ConsoleEnum> ENUM_MAP;
 
     static {
-        Map<String,ConsoleEnum> map = new ConcurrentHashMap<>();
+        Map<String, ConsoleEnum> map = new ConcurrentHashMap<>();
         for (ConsoleEnum instance : ConsoleEnum.values()) {
-            map.put(instance.getConsoleName().toLowerCase(),instance);
+            map.put(instance.getConsoleName().toLowerCase(), instance);
         }
         ENUM_MAP = Collections.unmodifiableMap(map);
     }
+
+    private final String consoleName;
 
     ConsoleEnum(String consoleName) {
         this.consoleName = consoleName;
     }
 
-    public String getConsoleName() {
-        return consoleName;
+    public static ConsoleEnum get(String name) {
+        return ENUM_MAP.get(name.toLowerCase());
     }
 
-    public static ConsoleEnum get (String name) {
-        return ENUM_MAP.get(name.toLowerCase());
+    public String getConsoleName() {
+        return consoleName;
     }
 }

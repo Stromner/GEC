@@ -15,15 +15,15 @@ import java.util.List;
 
 @Component
 public class ConsolePanel extends GECPanel {
+    private static final float THIRTY_PCT = 30;
+    private static final float SEVENTY_PCT = 70;
+    private final Font defaultFontSize = new Font("Serif", Font.BOLD, 12);
+    private final Font selectedFontSize = new Font("Serif", Font.BOLD, 18);
     @Autowired
     ConsoleHandler consoleHandler;
     @Autowired
     MenuPanel menu;
     JLabel previewImage;
-    private static float THIRTY_PCT = 30;
-    private static float SEVENTY_PCT = 70;
-    private Font defaultFontSize = new Font("Serif", Font.BOLD, 12);
-    private Font selectedFontSize = new Font("Serif", Font.BOLD, 18);
     private List<String> gameList;
 
     public void init() {

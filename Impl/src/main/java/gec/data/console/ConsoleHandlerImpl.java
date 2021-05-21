@@ -17,11 +17,11 @@ import java.util.List;
 
 @Component
 public class ConsoleHandlerImpl implements ConsoleHandler {
+    private static final Logger log = LoggerFactory.getLogger(ConsoleHandlerImpl.class);
     @Autowired
     ImageHandler imageHandler;
     @Autowired
     FileHandler fileHandler;
-    private static final Logger log = LoggerFactory.getLogger(ConsoleHandlerImpl.class);
     private String selectedConsole;
     private List<String> gameList;
 

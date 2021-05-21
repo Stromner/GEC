@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MenuLabel extends JLabel {
-    private Font defaultFontSize;
-    private Font selectedFontSize;
+    private final Font defaultFontSize;
+    private final Font selectedFontSize;
     private boolean isSelected;
 
     public MenuLabel(String data, Font defaultFontSize, Font selectedFontSize) {

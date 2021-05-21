@@ -85,11 +85,10 @@ public class MenuPanel extends GECPanel {
         }
     }
 
-    private Void switchMenuItem(Function<Integer, Integer> indexCalculator) {
+    private void switchMenuItem(Function<Integer, Integer> indexCalculator) {
         handleKeyPressed(indexCalculator);
         reorderMenuItems();
         eventPublisher.publishEvent(new MenuChangeEvent(this, startIndex));
-        return null;
     }
 
     private void handleKeyPressed(Function<Integer, Integer> indexCalculator) {

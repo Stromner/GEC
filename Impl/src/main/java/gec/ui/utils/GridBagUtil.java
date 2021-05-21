@@ -1,7 +1,5 @@
 package gec.ui.utils;
 
-import org.springframework.lang.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 

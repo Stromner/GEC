@@ -19,8 +19,8 @@ import java.awt.event.KeyEvent;
 @Component
 public class TitlePanel extends GECPanel {
     private static final Logger log = LoggerFactory.getLogger(TitlePanel.class);
-    private Font defaultFontSize = new Font("Serif", Font.BOLD, 60);
-    private Font selectedFontSize = new Font("Serif", Font.BOLD, 100);
+    private final Font defaultFontSize = new Font("Serif", Font.BOLD, 60);
+    private final Font selectedFontSize = new Font("Serif", Font.BOLD, 100);
     @Autowired
     private FileHandler fileHandler;
     @Autowired
@@ -47,9 +47,8 @@ public class TitlePanel extends GECPanel {
         actionMap.put(vkEnter, new KeyAction(vkEnter, aVoid -> selectConsole()));
     }
 
-    private Void selectConsole() {
+    private void selectConsole() {
         log.debug("Selected console '{}'", menu.getSelectedItem());
         eventPublisher.publishEvent(new ConsoleSelectedEvent(this, menu.getSelectedItem()));
-        return null;
     }
 }
