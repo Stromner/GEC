@@ -1,6 +1,5 @@
 package gec.ui.components.panels;
 
-import gec.core.ConsoleEnum;
 import gec.core.events.ConsoleSelectedEvent;
 import gec.data.file.FileHandler;
 import gec.ui.actions.KeyAction;
@@ -50,7 +49,7 @@ public class TitlePanel extends GECPanel {
 
     private Void selectConsole() {
         log.debug("Selected console '{}'", menu.getSelectedItem());
-        eventPublisher.publishEvent(new ConsoleSelectedEvent(this, ConsoleEnum.get(menu.getSelectedItem())));
+        eventPublisher.publishEvent(new ConsoleSelectedEvent(this, menu.getSelectedItem()));
         return null;
     }
 }

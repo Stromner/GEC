@@ -1,10 +1,10 @@
 package gec.ui.components.panels;
 
-import gec.core.ConsoleEnum;
-import gec.core.FileHandler;
+import gec.data.console.ConsoleHandler;
 import gec.ui.components.elements.GECPanel;
 import gec.ui.components.elements.MenuPanel;
 import gec.ui.layouts.RelativeLayout;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
@@ -13,20 +13,17 @@ import java.util.List;
 
 @Component
 public class ConsolePanel extends GECPanel {
+    @Autowired
+    ConsoleHandler consoleHandler;
     private static float THIRTY_PCT = 3;
     private static float SEVENTY_PCT = 7;
     private Font defaultFontSize = new Font("Serif", Font.BOLD, 12);
     private Font selectedFontSize = new Font("Serif", Font.BOLD, 18);
-    private ConsoleEnum selectedConsole;
-    private String gameListPath;
     private List<String> gameList;
 
-    public void init(ConsoleEnum selectedConsole) {
+    public void init() {
         // TODO Loading screen while we are initiating
-        this.selectedConsole = selectedConsole;
-        gameListPath = selectedConsole.getConsoleName() + ".txt";
-
-        gameList = FileHandler.readLinesFromFile(gameListPath);
+        gameList = consoleHandler.getGameList();
 
         this.setLayout(new GridBagLayout());
         createPanel();

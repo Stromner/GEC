@@ -1,17 +1,16 @@
 package gec.core.events;
 
-import gec.core.ConsoleEnum;
 import org.springframework.context.ApplicationEvent;
 
 public class ConsoleSelectedEvent extends ApplicationEvent {
-    private ConsoleEnum selectedConsole;
+    private String selectedConsole;
 
-    public ConsoleSelectedEvent(Object source, ConsoleEnum selectedConsole) {
+    public ConsoleSelectedEvent(Object source, String selectedConsole) {
         super(source);
         this.selectedConsole = selectedConsole;
     }
 
-    public ConsoleEnum getSelectedConsole() {
+    public String getSelectedConsole() {
         return selectedConsole;
     }
 }
