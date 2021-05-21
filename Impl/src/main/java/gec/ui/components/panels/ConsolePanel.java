@@ -13,6 +13,8 @@ import java.util.List;
 
 @Component
 public class ConsolePanel extends GECPanel {
+    private static float THIRTY_PCT = 3;
+    private static float SEVENTY_PCT = 7;
     private Font defaultFontSize = new Font("Serif", Font.BOLD, 12);
     private Font selectedFontSize = new Font("Serif", Font.BOLD, 18);
     private ConsoleEnum selectedConsole;
@@ -50,6 +52,6 @@ public class ConsolePanel extends GECPanel {
         menu.init(defaultFontSize, selectedFontSize, gameList, SwingConstants.LEADING);
         menuPanel.add(menu);
 
-        this.add(menuPanel, Float.valueOf(3));
+        this.add(menuPanel, THIRTY_PCT);
     }
 }
