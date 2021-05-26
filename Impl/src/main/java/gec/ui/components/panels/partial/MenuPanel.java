@@ -1,7 +1,9 @@
-package gec.ui.components.elements;
+package gec.ui.components.panels.partial;
 
 import gec.core.events.MenuChangeEvent;
 import gec.ui.actions.KeyAction;
+import gec.ui.components.elements.GECPanel;
+import gec.ui.components.elements.MenuLabel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ public class MenuPanel extends GECPanel {
     private ApplicationEventPublisher eventPublisher;
 
     public MenuPanel() {
+        super();
         menuLabelList = new ArrayList<>();
     }
 
@@ -79,6 +82,7 @@ public class MenuPanel extends GECPanel {
         add(menuLabelList.get(endIndex));
         int index = endIndex;
         index = increaseIndex(index);
+        // TODO Smart limit on how many are added? This is just wasting resources
         while (index != endIndex) {
             add(menuLabelList.get(index));
             index = increaseIndex(index);

@@ -3,14 +3,18 @@ package gec.ui.components.panels;
 import gec.core.events.MenuChangeEvent;
 import gec.data.console.ConsoleHandler;
 import gec.ui.components.elements.GECPanel;
-import gec.ui.components.elements.MenuPanel;
+import gec.ui.components.panels.partial.MenuPanel;
 import gec.ui.layouts.RelativeLayout;
+import gec.ui.utils.ImageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 @Component
@@ -20,24 +24,26 @@ public class ConsolePanel extends GECPanel {
     private final Font defaultFontSize = new Font("Serif", Font.BOLD, 12);
     private final Font selectedFontSize = new Font("Serif", Font.BOLD, 18);
     @Autowired
-    ConsoleHandler consoleHandler;
+    private ConsoleHandler consoleHandler;
     @Autowired
-    MenuPanel menu;
-    JLabel previewImage;
+    private MenuPanel menu;
+    private BufferedImage previewImage;
+    private JLabel previewImageLabel;
     private List<String> gameList;
+    private GECPanel previewPanel;
 
     public void init() {
         // TODO Loading screen while we are initiating
         gameList = consoleHandler.getGameList();
 
-        this.setLayout(new GridBagLayout());
         createPanel();
     }
 
     @EventListener
     public void onMenuChangeEvent(MenuChangeEvent event) {
         if (this.isDisplayable()) {
-            previewImage.setIcon(new ImageIcon(consoleHandler.getGamePreviewImage(gameList.get(event.getCurrentIndex()))));
+            previewImage = consoleHandler.getGamePreviewImage(gameList.get(event.getCurrentIndex()));
+            previewImageLabel.setIcon(new ImageIcon(ImageHelper.rescaleImage(previewImage, previewImageLabel.getWidth(), previewImageLabel.getHeight())));
         }
     }
 
@@ -64,11 +70,36 @@ public class ConsolePanel extends GECPanel {
     }
 
     private void createPreviewPanel() {
-        GECPanel previewPanel = new GECPanel();
+        previewPanel = new GECPanel();
         previewPanel.setLayout(new GridLayout(1, 1));
-        previewImage = new JLabel();
-        previewImage.setIcon(new ImageIcon(consoleHandler.getGamePreviewImage(gameList.get(0))));
-        previewPanel.add(previewImage);
+        previewImageLabel = new JLabel();
+        previewImage = consoleHandler.getGamePreviewImage(gameList.get(0));
+        previewImageLabel.setIcon(new ImageIcon(previewImage));
+
+        previewPanel.add(previewImageLabel);
+        previewPanel.addComponentListener(new ComponentListener() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                previewImageLabel.setIcon(new ImageIcon(ImageHelper.rescaleImage(
+                        previewImage,
+                        previewImageLabel.getWidth(),
+                        previewImageLabel.getHeight())));
+            }
+
+            @Override
+            public void componentMoved(ComponentEvent e) {
+            }
+
+            @Override
+            public void componentShown(ComponentEvent e) {
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent e) {
+            }
+        });
+
         this.add(previewPanel, SEVENTY_PCT);
     }
+
 }

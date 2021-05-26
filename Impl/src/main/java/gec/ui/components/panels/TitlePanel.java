@@ -4,7 +4,7 @@ import gec.core.events.ConsoleSelectedEvent;
 import gec.data.file.FileHandler;
 import gec.ui.actions.KeyAction;
 import gec.ui.components.elements.GECPanel;
-import gec.ui.components.elements.MenuPanel;
+import gec.ui.components.panels.partial.MenuPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -38,6 +38,7 @@ public class ImageHandlerImpl implements ImageHandler {
     }
 
     private Document getDataFromBing(GameMetaData gameMetaData) {
+        // TODO Generate event that we are fetching image so we can display something so it doesn't look like the program froze
         String connectionString = "https://www.bing.com/images/search?q=";
         connectionString += gameMetaData.getGameTitle();
         connectionString += "+";
