@@ -30,7 +30,6 @@ public class ConsolePanel extends GECPanel {
     private BufferedImage previewImage;
     private JLabel previewImageLabel;
     private List<String> gameList;
-    private GECPanel previewPanel;
 
     public void init() {
         // TODO Loading screen while we are initiating
@@ -70,7 +69,7 @@ public class ConsolePanel extends GECPanel {
     }
 
     private void createPreviewPanel() {
-        previewPanel = new GECPanel();
+        GECPanel previewPanel = new GECPanel();
         previewPanel.setLayout(new GridLayout(1, 1));
         previewImageLabel = new JLabel();
         previewImage = consoleHandler.getGamePreviewImage(gameList.get(0));
