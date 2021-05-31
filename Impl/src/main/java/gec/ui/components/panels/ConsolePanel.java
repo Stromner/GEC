@@ -3,6 +3,7 @@ package gec.ui.components.panels;
 import gec.core.events.MenuChangeEvent;
 import gec.data.console.ConsoleHandler;
 import gec.ui.components.elements.GECPanel;
+import gec.ui.components.elements.LoadingGlassPane;
 import gec.ui.components.panels.partial.MenuPanel;
 import gec.ui.layouts.RelativeLayout;
 import gec.ui.utils.ImageHelper;
@@ -16,6 +17,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 public class ConsolePanel extends GECPanel {
@@ -41,8 +43,14 @@ public class ConsolePanel extends GECPanel {
     @EventListener
     public void onMenuChangeEvent(MenuChangeEvent event) {
         if (this.isDisplayable()) {
-            previewImage = consoleHandler.getGamePreviewImage(gameList.get(event.getCurrentIndex()));
-            previewImageLabel.setIcon(new ImageIcon(ImageHelper.rescaleImage(previewImage, previewImageLabel.getWidth(), previewImageLabel.getHeight())));
+            LoadingGlassPane.getInstance().activate(this);
+
+            CompletableFuture.supplyAsync(() -> {
+                previewImage = consoleHandler.getGamePreviewImage(gameList.get(event.getCurrentIndex()));
+                previewImageLabel.setIcon(new ImageIcon(ImageHelper.rescaleImage(previewImage, previewImageLabel.getWidth(), previewImageLabel.getHeight())));
+                LoadingGlassPane.getInstance().deactivate();
+                return null;
+            });
         }
     }
 

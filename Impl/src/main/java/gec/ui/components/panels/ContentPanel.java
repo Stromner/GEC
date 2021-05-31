@@ -3,12 +3,14 @@ package gec.ui.components.panels;
 import gec.core.events.ConsoleSelectedEvent;
 import gec.data.console.ConsoleHandler;
 import gec.ui.components.elements.GECPanel;
+import gec.ui.components.elements.LoadingGlassPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.awt.*;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 public class ContentPanel extends GECPanel {
@@ -27,12 +29,19 @@ public class ContentPanel extends GECPanel {
 
     @EventListener
     public void onConsoleSelectedEvent(ConsoleSelectedEvent event) {
-        consoleHandler.selectConsole(event.getSelectedConsole());
+        LoadingGlassPane.getInstance().activate(this);
 
-        this.removeAll();
-        this.add(consolePanel);
-        consolePanel.init();
-        this.repaint(); // Remove old
-        this.revalidate(); // Add new
+        CompletableFuture.supplyAsync(() -> {
+            consoleHandler.selectConsole(event.getSelectedConsole());
+
+            this.removeAll();
+            this.add(consolePanel);
+            consolePanel.init();
+            this.repaint(); // Remove old
+            this.revalidate(); // Add new
+
+            LoadingGlassPane.getInstance().deactivate();
+            return null;
+        });
     }
 }
