@@ -17,7 +17,7 @@ public class LoadingGlassPane extends GECPanel implements KeyListener {
     private final Image originalImage;
     private Image animatedImage;
 
-    public LoadingGlassPane() {
+    private LoadingGlassPane() {
         super();
 
         setOpaque(false);
