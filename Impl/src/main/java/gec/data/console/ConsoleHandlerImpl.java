@@ -39,6 +39,9 @@ public class ConsoleHandlerImpl implements ConsoleHandler {
 
     @Override
     public BufferedImage getGamePreviewImage(String gameTitle) {
+        // Remove illegal characters from game title
+        gameTitle = gameTitle.replaceAll("[^a-zA-Z0-9.\\-]", "");
+
         String absoluteFilePath = fileHandler.getRootPath() + "/" + selectedConsole + "/" + gameTitle;
         absoluteFilePath += "/" + ImageHandler.IMAGE_NAME;
 
