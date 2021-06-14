@@ -40,7 +40,7 @@ public class ConsoleHandlerImpl implements ConsoleHandler {
     @Override
     public BufferedImage getGamePreviewImage(String gameTitle) {
         // Remove illegal characters from game title
-        gameTitle = gameTitle.replaceAll("[^a-zA-Z0-9.\\-]", "");
+        gameTitle = gameTitle.replaceAll("[^a-zA-Z0-9.\\- ]", "");
 
         String absoluteFilePath = fileHandler.getRootPath() + "/" + selectedConsole + "/" + gameTitle;
         absoluteFilePath += "/" + ImageHandler.IMAGE_NAME;
@@ -49,6 +49,7 @@ public class ConsoleHandlerImpl implements ConsoleHandler {
             if (!fileHandler.fileExists(absoluteFilePath)) {
                 return downloadImage(gameTitle, absoluteFilePath);
             } else {
+                log.debug("Game image already exist, reading from '{}'", absoluteFilePath);
                 return ImageIO.read(new File(absoluteFilePath));
             }
         } catch (IOException e) {
@@ -60,6 +61,7 @@ public class ConsoleHandlerImpl implements ConsoleHandler {
     }
 
     private BufferedImage downloadImage(String gameTitle, String absoluteFilePath) throws IOException {
+        log.debug("Downloading game image '{}' to '{}'", gameTitle, absoluteFilePath);
         GameMetaData game = new GameMetaData(gameTitle, ConsoleEnum.get(selectedConsole));
         BufferedImage image = imageHandler.downloadImage(game);
 
