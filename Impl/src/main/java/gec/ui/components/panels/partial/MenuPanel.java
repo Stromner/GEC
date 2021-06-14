@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -25,8 +27,8 @@ public class MenuPanel extends GECPanel {
     private static final Logger log = LoggerFactory.getLogger(MenuPanel.class);
     private final List<MenuLabel> menuLabelList;
     private List<String> itemList;
-    private int startIndex;
-    private int endIndex;
+    private int selectedIndex;
+    private int currentPanelHeight = 0;
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
@@ -42,16 +44,34 @@ public class MenuPanel extends GECPanel {
             throw new RuntimeException("List of items is empty!"); // TODO Graceful error to UI?
         }
 
-        startIndex = 0;
-        endIndex = itemList.size() - 1;
+        selectedIndex = 0;
 
         this.setLayout(new GridLayout(0, 1));
         createPanel(defaultFontSize, selectedFontSize, menuAlignment);
         setKeyBindings();
+
+        var us = this;
+        this.addAncestorListener(new AncestorListener() {
+            @Override
+            public void ancestorAdded(AncestorEvent event) {
+                currentPanelHeight = SwingUtilities.getRootPane(us).getHeight();
+                reorderMenuItems();
+            }
+
+            @Override
+            public void ancestorRemoved(AncestorEvent event) {
+            }
+
+            @Override
+            public void ancestorMoved(AncestorEvent event) {
+                currentPanelHeight = SwingUtilities.getRootPane(us).getHeight();
+                reorderMenuItems();
+            }
+        });
     }
 
     public String getSelectedItem() {
-        return itemList.get(startIndex);
+        return itemList.get(selectedIndex);
     }
 
     private void createPanel(Font defaultFontSize, Font selectedFontSize, int menuAlignment) {
@@ -61,7 +81,7 @@ public class MenuPanel extends GECPanel {
             menuLabelList.add(menuLabel);
         }
         reorderMenuItems();
-        menuLabelList.get(startIndex).toggleSelected();
+        menuLabelList.get(selectedIndex).toggleSelected();
     }
 
     private void setKeyBindings() {
@@ -79,27 +99,44 @@ public class MenuPanel extends GECPanel {
 
     private void reorderMenuItems() {
         removeAll();
-        add(menuLabelList.get(endIndex));
-        int index = endIndex;
-        index = increaseIndex(index);
-        // TODO Smart limit on how many are added? This is just wasting resources
-        while (index != endIndex) {
-            add(menuLabelList.get(index));
-            index = increaseIndex(index);
+
+        int fontHeight = menuLabelList.get(selectedIndex).getDefaultFontSize().getSize();
+        int nrOfElements = Math.min(currentPanelHeight / (fontHeight * 2), menuLabelList.size());
+        nrOfElements--; // "Remove" our selected item from calculation
+        int backHalf = nrOfElements / 2;
+        int frontHalf = nrOfElements - backHalf;
+        int iteratorIndex = selectedIndex;
+
+        // Navigate to start
+        for (int i = 0; i < backHalf; i++) {
+            iteratorIndex = decreaseIndex(iteratorIndex);
+        }
+
+        // Add back half
+        for (int i = 0; i < backHalf; i++) {
+            add(menuLabelList.get(iteratorIndex));
+            iteratorIndex = increaseIndex(iteratorIndex);
+        }
+        // Add central highlighted item
+        add(menuLabelList.get(iteratorIndex));
+        iteratorIndex = increaseIndex(iteratorIndex);
+        // Add front half
+        for (int i = 0; i < frontHalf; i++) {
+            add(menuLabelList.get(iteratorIndex));
+            iteratorIndex = increaseIndex(iteratorIndex);
         }
     }
 
     private void switchMenuItem(Function<Integer, Integer> indexCalculator) {
         handleKeyPressed(indexCalculator);
         reorderMenuItems();
-        eventPublisher.publishEvent(new MenuChangeEvent(this, startIndex));
+        eventPublisher.publishEvent(new MenuChangeEvent(this, selectedIndex));
     }
 
     private void handleKeyPressed(Function<Integer, Integer> indexCalculator) {
-        menuLabelList.get(startIndex).toggleSelected();
-        startIndex = indexCalculator.apply(startIndex);
-        endIndex = indexCalculator.apply(endIndex);
-        menuLabelList.get(startIndex).toggleSelected();
+        menuLabelList.get(selectedIndex).toggleSelected();
+        selectedIndex = indexCalculator.apply(selectedIndex);
+        menuLabelList.get(selectedIndex).toggleSelected();
     }
 
     private int decreaseIndex(int index) {

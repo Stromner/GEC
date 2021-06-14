@@ -23,4 +23,8 @@ public class MenuLabel extends JLabel {
 
         this.setFont(isSelected ? selectedFontSize : defaultFontSize);
     }
+
+    public Font getDefaultFontSize() {
+        return defaultFontSize;
+    }
 }
