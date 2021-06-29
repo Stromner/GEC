@@ -34,7 +34,6 @@ public class ConsolePanel extends GECPanel {
     private List<String> gameList;
 
     public void init() {
-        // TODO Loading screen while we are initiating
         gameList = consoleHandler.getGameList();
 
         createPanel();
