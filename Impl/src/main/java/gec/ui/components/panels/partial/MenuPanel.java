@@ -102,9 +102,7 @@ public class MenuPanel extends GECPanel {
 
         int fontHeight = menuLabelList.get(selectedIndex).getDefaultFontSize().getSize();
         int nrOfElements = Math.min(currentPanelHeight / (fontHeight * 2), menuLabelList.size());
-        nrOfElements--; // "Remove" our selected item from calculation
         int backHalf = nrOfElements / 2;
-        int frontHalf = nrOfElements - backHalf;
         int iteratorIndex = selectedIndex;
 
         // Navigate to start
@@ -112,16 +110,8 @@ public class MenuPanel extends GECPanel {
             iteratorIndex = decreaseIndex(iteratorIndex);
         }
 
-        // Add back half
-        for (int i = 0; i < backHalf; i++) {
-            add(menuLabelList.get(iteratorIndex));
-            iteratorIndex = increaseIndex(iteratorIndex);
-        }
-        // Add central highlighted item
-        add(menuLabelList.get(iteratorIndex));
-        iteratorIndex = increaseIndex(iteratorIndex);
-        // Add front half
-        for (int i = 0; i < frontHalf; i++) {
+        // Add entries
+        for (int i = 0; i < nrOfElements; i++) {
             add(menuLabelList.get(iteratorIndex));
             iteratorIndex = increaseIndex(iteratorIndex);
         }
