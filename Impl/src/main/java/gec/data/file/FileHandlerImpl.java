@@ -1,7 +1,6 @@
 package gec.data.file;
 
 import gec.core.ConsoleEnum;
-import gec.ui.components.panels.ConsolePanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,7 +49,7 @@ public class FileHandlerImpl implements FileHandler {
 
     @Override
     public List<String> readLinesFromFile(String filePath) {
-        URL url = ConsolePanel.class.getClassLoader().getResource(filePath);
+        URL url = this.getClass().getClassLoader().getResource(filePath);
         List<String> list = new ArrayList<>();
 
         try {
