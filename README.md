@@ -1,7 +1,7 @@
 # Game Emulator Collector (GEC)
 
-Front-end program to have a unified way to launch games for different emulators. **No actual games or emulator code will
-be hosted within the project**
+Client to have a unified way to launch games for different emulators. **No actual games or emulator code will
+be hosted within the project for obvious reasons**
 
 ## Planned Work
 
