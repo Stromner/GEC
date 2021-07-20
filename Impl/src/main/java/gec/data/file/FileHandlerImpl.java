@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -69,6 +70,11 @@ public class FileHandlerImpl implements FileHandler {
         }
 
         return list;
+    }
+
+    @Override
+    public boolean saveFile(InputStream is, String fileName) {
+        return false;
     }
 
     private void createFolderStructure() {

@@ -1,4 +1,4 @@
-package gec.data.rom.crawler;
+package gec.data.rom.crawler.sites;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.attachment.AttachmentHandler;
@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.io.InputStream;
 
-// POC that you can trigger a file download programmatically
 @Component
-public class RomsKingdomDotCom {
+public class RomsKingdomDotCom extends AbstractSite {
     private InputStream is;
 
+    @Override
     public InputStream downloadRom(String url) throws IOException {
         WebClient webClient = new WebClient();
         webClient.getOptions().setThrowExceptionOnScriptError(false);

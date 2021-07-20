@@ -1,5 +1,6 @@
 package gec.data.file;
 
+import java.io.InputStream;
 import java.util.List;
 
 public interface FileHandler {
@@ -12,4 +13,6 @@ public interface FileHandler {
     boolean fileExists(String absoluteFilePath);
 
     List<String> readLinesFromFile(String filePath);
+
+    boolean saveFile(InputStream is, String fileName);
 }

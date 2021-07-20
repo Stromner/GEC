@@ -1,4 +1,4 @@
-package gec.data.rom.crawler;
+package gec.data.rom.crawler.sites;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
