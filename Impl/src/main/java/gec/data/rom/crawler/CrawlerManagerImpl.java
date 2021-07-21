@@ -8,15 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 @Component
 public class CrawlerManagerImpl implements CrawlerManager {
     @Autowired
-    FileHandler fileHandler;
+    private FileHandler fileHandler;
     @Autowired
-    RomsKingdomDotCom romsKingdomDotCom;
+    private RomsKingdomDotCom romsKingdomDotCom;
 
     @Override
     public List<String> findLinks(ConsoleEnum console, String gameTitle) {
@@ -24,15 +23,14 @@ public class CrawlerManagerImpl implements CrawlerManager {
     }
 
     @Override
-    public boolean downloadRom(SupportedSiteEnum site, String url) {
+    public void downloadRom(ConsoleEnum console, String gameTitle, SupportedSiteEnum site, String url) {
         try {
-            InputStream is = getSiteComponent(site).downloadRom(url);
-            return fileHandler.saveFile(is, "rom.nnn"); // TODO Find file type (yes) and name (maybe) // TODO Solve filePath
+            RomInfo romInfo = getSiteComponent(site).downloadRom(url);
+            fileHandler.saveFile(romInfo, console, gameTitle);
         } catch (IOException e) {
             e.printStackTrace();
             // TODO Nice error to UI?
         }
-        return false;
     }
 
     private AbstractSite getSiteComponent(SupportedSiteEnum site) {

@@ -7,5 +7,5 @@ import java.util.List;
 public interface CrawlerManager {
     List<String> findLinks(ConsoleEnum console, String gameTitle);
 
-    boolean downloadRom(SupportedSiteEnum site, String url);
+    void downloadRom(ConsoleEnum console, String gameTitle, SupportedSiteEnum site, String url);
 }

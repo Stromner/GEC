@@ -1,6 +1,8 @@
 package gec.data.file;
 
-import java.io.InputStream;
+import gec.core.ConsoleEnum;
+import gec.data.rom.crawler.RomInfo;
+
 import java.util.List;
 
 public interface FileHandler {
@@ -14,5 +16,5 @@ public interface FileHandler {
 
     List<String> readLinesFromFile(String filePath);
 
-    boolean saveFile(InputStream is, String fileName);
+    void saveFile(RomInfo romInfo, ConsoleEnum console, String gameTitle);
 }

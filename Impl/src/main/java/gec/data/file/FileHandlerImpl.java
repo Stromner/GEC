@@ -1,13 +1,13 @@
 package gec.data.file;
 
 import gec.core.ConsoleEnum;
+import gec.data.rom.crawler.RomInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -73,8 +73,8 @@ public class FileHandlerImpl implements FileHandler {
     }
 
     @Override
-    public boolean saveFile(InputStream is, String fileName) {
-        return false;
+    public void saveFile(RomInfo romInfo, ConsoleEnum console, String gameTitle) {
+
     }
 
     private void createFolderStructure() {
