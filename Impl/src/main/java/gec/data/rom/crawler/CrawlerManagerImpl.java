@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class CrawlerManagerImpl implements CrawlerManager {
@@ -18,8 +21,23 @@ public class CrawlerManagerImpl implements CrawlerManager {
     private RomsKingdomDotCom romsKingdomDotCom;
 
     @Override
-    public List<String> findLinks(ConsoleEnum console, String gameTitle) {
-        return null;
+    public List<String> findUrls(ConsoleEnum console, String gameTitle) throws IllegalAccessException {
+        List<String> urls = new ArrayList<>();
+        Field[] fields = this.getClass().getDeclaredFields();
+        for (Field f : fields) {
+            if (AbstractSite.class.isAssignableFrom(f.getType())) {
+                RomsKingdomDotCom site = (RomsKingdomDotCom) f.get(this);
+                try {
+                    urls.add(site.findUrl(console, gameTitle));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("Could not get link!");
+                    // TODO Nice error to UI?
+                }
+            }
+        }
+
+        return urls.stream().filter(url -> !url.isBlank()).collect(Collectors.toList());
     }
 
     @Override
@@ -29,6 +47,7 @@ public class CrawlerManagerImpl implements CrawlerManager {
             fileHandler.saveFile(romInfo, console, gameTitle);
         } catch (IOException e) {
             e.printStackTrace();
+            throw new RuntimeException("Could not download rom!");
             // TODO Nice error to UI?
         }
     }

@@ -5,7 +5,7 @@ import gec.core.ConsoleEnum;
 import java.util.List;
 
 public interface CrawlerManager {
-    List<String> findLinks(ConsoleEnum console, String gameTitle);
+    List<String> findUrls(ConsoleEnum console, String gameTitle) throws IllegalAccessException;
 
     void downloadRom(ConsoleEnum console, String gameTitle, SupportedSiteEnum site, String url);
 }
