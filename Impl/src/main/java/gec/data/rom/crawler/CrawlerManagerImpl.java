@@ -27,7 +27,7 @@ public class CrawlerManagerImpl implements CrawlerManager {
         Field[] fields = this.getClass().getDeclaredFields();
         for (Field f : fields) {
             if (AbstractSite.class.isAssignableFrom(f.getType())) {
-                RomsKingdomDotCom site = (RomsKingdomDotCom) f.get(this);
+                AbstractSite site = (AbstractSite) f.get(this);
                 try {
                     urls.add(site.findUrl(console, gameTitle));
                 } catch (IOException e) {
