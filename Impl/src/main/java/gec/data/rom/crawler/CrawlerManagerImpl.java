@@ -1,6 +1,7 @@
 package gec.data.rom.crawler;
 
 import gec.core.ConsoleEnum;
+import gec.data.GameMetaData;
 import gec.data.file.FileHandler;
 import gec.data.rom.crawler.sites.AbstractSite;
 import gec.data.rom.crawler.sites.RomsKingdomDotCom;
@@ -44,7 +45,7 @@ public class CrawlerManagerImpl implements CrawlerManager {
     public void downloadRom(ConsoleEnum console, String gameTitle, SupportedSiteEnum site, String url) {
         try {
             RomInfo romInfo = getSiteComponent(site).downloadRom(url);
-            fileHandler.saveFile(romInfo, console, gameTitle);
+            fileHandler.saveRomToDisk(romInfo, new GameMetaData(gameTitle, console));
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Could not download rom!");

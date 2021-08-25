@@ -1,8 +1,9 @@
 package gec.data.file;
 
-import gec.core.ConsoleEnum;
+import gec.data.GameMetaData;
 import gec.data.rom.crawler.RomInfo;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 public interface FileHandler {
@@ -16,5 +17,7 @@ public interface FileHandler {
 
     List<String> readLinesFromFile(String filePath);
 
-    void saveFile(RomInfo romInfo, ConsoleEnum console, String gameTitle);
+    void saveImageToDisk(BufferedImage image, GameMetaData gameMetaData);
+
+    void saveRomToDisk(RomInfo romInfo, GameMetaData gameMetaData);
 }

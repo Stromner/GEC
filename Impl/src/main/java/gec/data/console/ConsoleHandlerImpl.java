@@ -9,10 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 @Component
@@ -45,30 +42,19 @@ public class ConsoleHandlerImpl implements ConsoleHandler {
         String absoluteFilePath = fileHandler.getRootPath() + "/" + selectedConsole + "/" + gameTitle;
         absoluteFilePath += "/" + ImageHandler.IMAGE_NAME;
 
-        try {
-            if (!fileHandler.fileExists(absoluteFilePath)) {
-                return downloadImage(gameTitle, absoluteFilePath);
-            } else {
-                log.debug("Game image already exist, reading from '{}'", absoluteFilePath);
-                return ImageIO.read(new File(absoluteFilePath));
-            }
-        } catch (IOException e) {
-            log.error("Error while creating image '{}'", absoluteFilePath);
-            e.printStackTrace();
-            // TODO Publish new type of error event
-            throw new RuntimeException();
+        if (!fileHandler.fileExists(absoluteFilePath)) {
+            return downloadImage(gameTitle, absoluteFilePath);
+        } else {
+            log.debug("Game image already exist, reading from '{}'", absoluteFilePath);
+            return imageHandler.loadImageFromDisk(absoluteFilePath);
         }
     }
 
-    private BufferedImage downloadImage(String gameTitle, String absoluteFilePath) throws IOException {
+    private BufferedImage downloadImage(String gameTitle, String absoluteFilePath) {
         log.debug("Downloading game image '{}' to '{}'", gameTitle, absoluteFilePath);
         GameMetaData game = new GameMetaData(gameTitle, ConsoleEnum.get(selectedConsole));
         BufferedImage image = imageHandler.downloadImage(game);
-
-        // Create image locally
-        File file = new File(absoluteFilePath);
-        file.mkdirs();
-        ImageIO.write(image, "png", new File(absoluteFilePath));
+        fileHandler.saveImageToDisk(image, game);
 
         return image;
     }

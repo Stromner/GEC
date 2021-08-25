@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.regex.Matcher;
@@ -34,6 +35,18 @@ public class ImageHandlerImpl implements ImageHandler {
         } catch (IOException e) {
             log.error("Failed to download image '{}'", imageUrl);
             throw new ImageException("Failed to download image!", e);
+        }
+    }
+
+    @Override
+    public BufferedImage loadImageFromDisk(String absoluteFilePath) {
+        try {
+            return ImageIO.read(new File(absoluteFilePath));
+        } catch (IOException e) {
+            log.error("Error while creating image '{}'", absoluteFilePath);
+            e.printStackTrace();
+            // TODO Publish new type of error event
+            throw new RuntimeException();
         }
     }
 
@@ -61,7 +74,7 @@ public class ImageHandlerImpl implements ImageHandler {
         Elements matchingElements = document.select(cssQuery);
         Element element = matchingElements.get(0);
 
-        Pattern patt = Pattern.compile("https?:\\/\\/tse.\\.mm.bing.net.+?(?=&)");
+        Pattern patt = Pattern.compile("https?://tse.\\.mm.bing.net.+?(?=&)");
         Matcher matcher = patt.matcher(element.toString());
         if (matcher.find()) {
             return matcher.group(0);

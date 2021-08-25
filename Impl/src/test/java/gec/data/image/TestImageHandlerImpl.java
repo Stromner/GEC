@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.awt.image.BufferedImage;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 public class TestImageHandlerImpl {
@@ -28,5 +29,10 @@ public class TestImageHandlerImpl {
         GameMetaData gameMetaData = new GameMetaData("Final Fantasy 7", ConsoleEnum.PLAYSTATION_ONE);
         BufferedImage image = unitUnderTest.downloadImage(gameMetaData);
         assertNotNull(image);
+    }
+
+    @Test
+    public void testLoadImageFromDisk_ImageMissing() {
+        assertThrows(RuntimeException.class, () -> unitUnderTest.loadImageFromDisk(""));
     }
 }

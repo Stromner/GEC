@@ -1,13 +1,20 @@
 package gec.data.file;
 
 import gec.core.ConsoleEnum;
+import gec.data.GameMetaData;
+import gec.data.image.ImageHandler;
 import gec.data.rom.crawler.RomInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -19,7 +26,7 @@ import java.util.stream.Stream;
 @Component
 public class FileHandlerImpl implements FileHandler {
     private static final Logger log = LoggerFactory.getLogger(FileHandlerImpl.class);
-    private static final String ROOT_FOLDER_NAME = "GEC";
+    public static final String ROOT_FOLDER_NAME = "GEC";
     @Value("${custom.root.location}")
     private String rootPath;
     private List<String> consoleList;
@@ -73,8 +80,37 @@ public class FileHandlerImpl implements FileHandler {
     }
 
     @Override
-    public void saveFile(RomInfo romInfo, ConsoleEnum console, String gameTitle) {
+    public void saveImageToDisk(BufferedImage image, GameMetaData game) {
+        String fullPath = prepareForSave(game);
+        String imagePath = fullPath + ImageHandler.IMAGE_NAME;
 
+        File file = new File(fullPath);
+        file.mkdirs();
+
+        try {
+            ImageIO.write(image, "png", new File(imagePath));
+        } catch (IOException e) {
+            log.error("Error while creating image '{}'", imagePath);
+            e.printStackTrace();
+            // TODO Publish new type of error event
+            throw new RuntimeException();
+        }
+    }
+
+    @Override
+    public void saveRomToDisk(RomInfo romInfo, GameMetaData game) {
+        String fullPath = prepareForSave(game);
+        String romPath = fullPath + romInfo.getFileName();
+
+        try {
+            OutputStream outputStream = new FileOutputStream(romPath);
+            outputStream.write(romInfo.getInputStream().readAllBytes());
+        } catch (IOException e) {
+            log.error("Error while creating rom '{}'", romPath);
+            e.printStackTrace();
+            // TODO Publish new type of error event
+            throw new RuntimeException();
+        }
     }
 
     private void createFolderStructure() {
@@ -94,5 +130,16 @@ public class FileHandlerImpl implements FileHandler {
             log.debug("Creating folder at '{}'", path);
             dir.mkdirs();
         }
+    }
+
+    private String prepareForSave(GameMetaData game) {
+        // Remove illegal characters from game title
+        game.setGameTitle(game.getGameTitle().replaceAll("[^a-zA-Z0-9.\\- ]", ""));
+        String fullPath = rootPath + "/" + game.getConsole().getConsoleName() + "/" + game.getGameTitle() + "/";
+
+        File file = new File(fullPath);
+        file.mkdirs();
+
+        return fullPath;
     }
 }
