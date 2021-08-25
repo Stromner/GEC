@@ -105,6 +105,7 @@ public class FileHandlerImpl implements FileHandler {
         try {
             OutputStream outputStream = new FileOutputStream(romPath);
             outputStream.write(romInfo.getInputStream().readAllBytes());
+            outputStream.close();
         } catch (IOException e) {
             log.error("Error while creating rom '{}'", romPath);
             e.printStackTrace();

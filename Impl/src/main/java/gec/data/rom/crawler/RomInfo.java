@@ -6,6 +6,14 @@ public class RomInfo {
     private InputStream is;
     private String fileName;
 
+    public RomInfo() {
+    }
+
+    public RomInfo(String fileName, InputStream is) {
+        this.fileName = fileName;
+        this.is = is;
+    }
+
     public InputStream getInputStream() {
         return is;
     }
