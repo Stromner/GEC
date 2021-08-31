@@ -2,37 +2,58 @@ package gec.data.rom.crawler.sites;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.attachment.AttachmentHandler;
-import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
 import gec.core.ConsoleEnum;
+import gec.data.file.FileHandler;
 import gec.data.rom.crawler.RomInfo;
+import info.debatty.java.stringsimilarity.RatcliffObershelp;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-public class RomsKingdomDotCom extends AbstractSite {
-    private final String baseQuery = "https://romskingdom.com/en/download-roms/";
-    private final String searchTerm = "?search=";
-    private final String suffixSearchTerm = "&order=count_download";
+public class RomsKingdomDotCom extends AbstractSite implements RomPage {
+    private static final String CACHE_NAME = "RomsKingdom.com";
+    private final String site = "https://romskingdom.com/";
+    private String cachePath;
+    @Autowired
+    private FileHandler fileHandler;
+
+    @PostConstruct
+    public void init() {
+        cachePath = fileHandler.getRootPath() +
+                "/RomsKingdomDotCom"; // TODO Don't think this will work during normal run, the changed root path that we're after is changed first far after this @PostConstruct method have run
+        initCache(cachePath);
+    }
 
     @Override
-    // TODO This is obviously not an elegant way to find the URL, rework it in the future
-    public String findUrl(ConsoleEnum console, String gameTitle) throws IOException {
-        String searchQuery = baseQuery + getEmulatorNameString(console) + searchTerm + gameTitle + suffixSearchTerm;
-        WebClient webClient = new WebClient();
-        webClient.getOptions().setThrowExceptionOnScriptError(false);
-        webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+    public void clearCache() {
+        diskCache.remove(CACHE_NAME);
+        diskCache.close();
+    }
 
-        HtmlPage page = webClient.getPage(searchQuery);
-        HtmlAnchor attribute = (HtmlAnchor) page.getByXPath(
-                        "//a[contains(@href,'" + baseQuery + getEmulatorNameString(console) + "') and contains(@title, ' ')]")
-                .get(0);
-        return attribute.getAttribute("href") + "/start";
+    @Override
+    public String findRomUrl(ConsoleEnum console, String gameTitle) throws IOException, InterruptedException {
+        List<String> hrefs = getHrefsForSite(site, CACHE_NAME);
+        String searchCrumbs = getEmulatorNameString(console) + gameTitle + "/start";
+
+        Double bestScore = null;
+        String bestScoreHref = "";
+        for (String href : hrefs) {
+            var distanceAlgorithm = new RatcliffObershelp();
+            double localScore = distanceAlgorithm.distance(href, searchCrumbs);
+            if (bestScore == null || localScore < bestScore) {
+                bestScoreHref = href;
+                bestScore = localScore;
+            }
+        }
+
+        return bestScoreHref;
     }
 
     @Override

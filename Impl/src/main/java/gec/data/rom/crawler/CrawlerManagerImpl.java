@@ -3,7 +3,7 @@ package gec.data.rom.crawler;
 import gec.core.ConsoleEnum;
 import gec.data.GameMetaData;
 import gec.data.file.FileHandler;
-import gec.data.rom.crawler.sites.AbstractSite;
+import gec.data.rom.crawler.sites.RomPage;
 import gec.data.rom.crawler.sites.RomsKingdomDotCom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,11 +26,11 @@ public class CrawlerManagerImpl implements CrawlerManager {
         List<String> urls = new ArrayList<>();
         Field[] fields = this.getClass().getDeclaredFields();
         for (Field f : fields) {
-            if (AbstractSite.class.isAssignableFrom(f.getType())) {
-                AbstractSite site = (AbstractSite) f.get(this);
+            if (RomPage.class.isAssignableFrom(f.getType())) {
+                RomPage site = (RomPage) f.get(this);
                 try {
-                    urls.add(site.findUrl(console, gameTitle));
-                } catch (IOException e) {
+                    urls.add(site.findRomUrl(console, gameTitle));
+                } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                     throw new RuntimeException("Could not get link!");
                     // TODO Nice error to UI?
@@ -53,7 +53,7 @@ public class CrawlerManagerImpl implements CrawlerManager {
         }
     }
 
-    private AbstractSite getSiteComponent(SupportedSiteEnum site) {
+    private RomPage getSiteComponent(SupportedSiteEnum site) {
         return switch (site) {
             case ROMS_KINGDOM_DOT_COM -> romsKingdomDotCom;
             default -> throw new RuntimeException("Unsupported site!");

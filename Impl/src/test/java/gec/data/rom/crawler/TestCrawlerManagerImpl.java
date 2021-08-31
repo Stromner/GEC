@@ -28,17 +28,17 @@ public class TestCrawlerManagerImpl {
     CrawlerManagerImpl unitUnderTest;
 
     @Test
-    public void testFindUrls() throws IllegalAccessException, IOException {
+    public void testFindUrls() throws IllegalAccessException, IOException, InterruptedException {
         String url = "testUrl";
-        when(romsKingdomDotCom.findUrl(any(), anyString())).thenReturn(url);
+        when(romsKingdomDotCom.findRomUrl(any(), anyString())).thenReturn(url);
 
         List<String> foundUrls = unitUnderTest.findUrls(ConsoleEnum.NINTENDO_64, "gameTitle");
         assertTrue(foundUrls.contains(url));
     }
 
     @Test
-    public void testNoUrlsFound() throws IllegalAccessException, IOException {
-        when(romsKingdomDotCom.findUrl(any(), anyString())).thenReturn("");
+    public void testNoUrlsFound() throws IllegalAccessException, IOException, InterruptedException {
+        when(romsKingdomDotCom.findRomUrl(any(), anyString())).thenReturn("");
 
         List<String> foundUrls = unitUnderTest.findUrls(ConsoleEnum.NINTENDO_64, "gameTitle");
         assertTrue(foundUrls.isEmpty());
