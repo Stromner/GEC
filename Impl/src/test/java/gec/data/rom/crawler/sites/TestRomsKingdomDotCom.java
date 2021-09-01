@@ -16,8 +16,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,10 +31,15 @@ public class TestRomsKingdomDotCom {
     private RomsKingdomDotCom unitUnderTest;
 
     @Test
+    public void testMissingInitCache() {
+        assertThrows(RuntimeException.class, () -> unitUnderTest.findRomUrl(ConsoleEnum.NINTENDO_64, "gameTitle"));
+    }
+
+    @Test
     public void testCacheSite() throws IOException, InterruptedException, URISyntaxException {
         // SETUP
         when(fileHandler.getRootPath()).thenReturn(TEST_CACHE_PATH);
-        unitUnderTest.init();
+        unitUnderTest.initCache();
 
         var cachePath = Paths.get(getClass().getClassLoader().getResource("").toURI());
         if (Files.exists(cachePath)) {
@@ -49,7 +53,7 @@ public class TestRomsKingdomDotCom {
     @Test
     public void testFindRomUrl() throws IOException, InterruptedException {
         when(fileHandler.getRootPath()).thenReturn(TEST_CACHE_PATH);
-        unitUnderTest.init();
+        unitUnderTest.initCache();
 
         String url = unitUnderTest.findRomUrl(ConsoleEnum.SNES, "Super Mario World");
         assertEquals(DIRECT_LINK, url);

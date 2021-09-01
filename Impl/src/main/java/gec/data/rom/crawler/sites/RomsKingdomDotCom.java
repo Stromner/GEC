@@ -10,7 +10,6 @@ import info.debatty.java.stringsimilarity.RatcliffObershelp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -24,10 +23,9 @@ public class RomsKingdomDotCom extends AbstractSite implements RomPage {
     @Autowired
     private FileHandler fileHandler;
 
-    @PostConstruct
-    public void init() {
-        cachePath = fileHandler.getRootPath() +
-                "/RomsKingdomDotCom"; // TODO Don't think this will work during normal run, the changed root path that we're after is changed first far after this @PostConstruct method have run
+    @Override
+    public void initCache() {
+        cachePath = fileHandler.getRootPath() + "/RomsKingdomDotCom";
         initCache(cachePath);
     }
 

@@ -43,12 +43,17 @@ public abstract class AbstractSite {
     }
 
     protected List<String> getHrefsForSite(String site, String cacheName) throws IOException, InterruptedException {
+        if (diskCache == null) {
+            log.error("Calling getHrefsForSite({}, {}) before calling createCache({})", site,
+                    cacheName, cacheName);
+            throw new RuntimeException("getHrefsForSite() called before used cache have been initiated");
+        }
+
         if (diskCache.get(cacheName) == null) {
             log.info("No cache found for site, indexing...");
 
             List<String> masterList = new ArrayList<>();
             Queue<String> queue = new LinkedList<>();
-            masterList.add(site);
             queue.add(site);
 
             while (!queue.isEmpty()) {
