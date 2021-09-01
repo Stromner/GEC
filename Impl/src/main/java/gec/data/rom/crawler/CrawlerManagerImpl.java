@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Component
@@ -23,22 +24,24 @@ public class CrawlerManagerImpl implements CrawlerManager {
 
     @Override
     public List<String> findUrls(ConsoleEnum console, String gameTitle) throws IllegalAccessException {
-        List<String> urls = new ArrayList<>();
+        List<CompletableFuture<String>> threads = new ArrayList<>();
         Field[] fields = this.getClass().getDeclaredFields();
         for (Field f : fields) {
             if (RomPage.class.isAssignableFrom(f.getType())) {
                 RomPage site = (RomPage) f.get(this);
-                try {
-                    urls.add(site.findRomUrl(console, gameTitle));
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException("Could not get link!");
-                    // TODO Nice error to UI?
-                }
+                threads.add(CompletableFuture.supplyAsync(() -> {
+                    try {
+                        return site.findRomUrl(console, gameTitle);
+                    } catch (IOException | InterruptedException e) {
+                        e.printStackTrace();
+                        throw new RuntimeException("Could not get link!");
+                        // TODO Nice error to UI? Ensure it crashes nicely (program can continue)?
+                    }
+                }));
             }
         }
 
-        return urls.stream().filter(url -> !url.isBlank()).collect(Collectors.toList());
+        return threads.stream().map(CompletableFuture::join).filter(url -> !url.isBlank()).collect(Collectors.toList());
     }
 
     @Override
