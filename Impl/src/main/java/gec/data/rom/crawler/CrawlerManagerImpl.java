@@ -5,6 +5,8 @@ import gec.data.GameMetaData;
 import gec.data.file.FileHandler;
 import gec.data.rom.crawler.sites.RomPage;
 import gec.data.rom.crawler.sites.RomsKingdomDotCom;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class CrawlerManagerImpl implements CrawlerManager {
+    private static final Logger log = LoggerFactory.getLogger(CrawlerManagerImpl.class);
     @Autowired
     private FileHandler fileHandler;
     @Autowired
@@ -46,9 +49,14 @@ public class CrawlerManagerImpl implements CrawlerManager {
 
     @Override
     public void downloadRom(ConsoleEnum console, String gameTitle, SupportedSiteEnum site, String url) {
+        GameMetaData metaData = new GameMetaData(gameTitle, console);
+        if (fileHandler.romExists(metaData)) {
+            log.debug("rom already exists, returning...");
+            return;
+        }
         try {
             RomInfo romInfo = getSiteComponent(site).downloadRom(url);
-            fileHandler.saveRomToDisk(romInfo, new GameMetaData(gameTitle, console));
+            fileHandler.saveRomToDisk(romInfo, metaData);
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Could not download rom!");
