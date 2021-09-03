@@ -22,11 +22,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 public class TestFileHandlerImpl {
     private static final String TEST_PATH = System.getProperty("user.dir") + "/target/" + System.currentTimeMillis();
+    private GameMetaData testGame = new GameMetaData("TestGame", ConsoleEnum.NINTENDO_64);
+    private RomInfo testRomInfo = new RomInfo("Rom.rom", new ByteArrayInputStream("testStream".getBytes()));
 
     @InjectMocks
     FileHandlerImpl unitUnderTest;
@@ -48,7 +51,6 @@ public class TestFileHandlerImpl {
     @Test
     public void testCreateFileStructure() {
         unitUnderTest.initFileStructure();
-
         Path rootPath = Path.of(unitUnderTest.getRootPath());
 
         // Verify root
@@ -63,13 +65,13 @@ public class TestFileHandlerImpl {
 
     @Test
     public void testSavePreviewImage() {
-        GameMetaData game = new GameMetaData("TestGame", ConsoleEnum.NINTENDO_64);
         unitUnderTest.initFileStructure();
 
-        unitUnderTest.saveImageToDisk(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), game);
+        unitUnderTest.saveImageToDisk(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), testGame);
 
-        Path imagePath = Paths.get(unitUnderTest.getRootPath(), game.getConsole().getConsoleName(), game.getGameTitle(),
-                ImageHandler.IMAGE_NAME);
+        Path imagePath =
+                Paths.get(unitUnderTest.getRootPath(), testGame.getConsole().getConsoleName(), testGame.getGameTitle(),
+                        ImageHandler.IMAGE_NAME);
         assertTrue(Files.exists(imagePath));
     }
 
@@ -87,14 +89,39 @@ public class TestFileHandlerImpl {
 
     @Test
     public void testSaveRom() {
-        GameMetaData game = new GameMetaData("TestGame", ConsoleEnum.NINTENDO_64);
-        RomInfo romInfo = new RomInfo("Rom.rom", new ByteArrayInputStream("testStream".getBytes()));
         unitUnderTest.initFileStructure();
 
-        unitUnderTest.saveRomToDisk(romInfo, game);
+        unitUnderTest.saveRomToDisk(testRomInfo, testGame);
 
-        Path romPath = Paths.get(unitUnderTest.getRootPath(), game.getConsole().getConsoleName(), game.getGameTitle(),
-                romInfo.getFileName());
+        Path romPath =
+                Paths.get(unitUnderTest.getRootPath(), testGame.getConsole().getConsoleName(), testGame.getGameTitle(),
+                        testRomInfo.getFileName());
         assertTrue(Files.exists(romPath));
+    }
+
+    @Test
+    public void testRomExists_NoPreviewImage() {
+        unitUnderTest.initFileStructure();
+
+        unitUnderTest.saveRomToDisk(testRomInfo, testGame);
+
+        assertTrue(unitUnderTest.romExists(testGame));
+    }
+
+    @Test
+    public void testRomExists_WithPreviewImage() {
+        unitUnderTest.initFileStructure();
+
+        unitUnderTest.saveRomToDisk(testRomInfo, testGame);
+        unitUnderTest.saveImageToDisk(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), testGame);
+
+        assertTrue(unitUnderTest.romExists(testGame));
+    }
+
+    @Test
+    public void testRomExists_EmptyFolder() {
+        unitUnderTest.initFileStructure();
+
+        assertFalse(unitUnderTest.romExists(testGame));
     }
 }

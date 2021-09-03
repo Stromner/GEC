@@ -15,6 +15,8 @@ public interface FileHandler {
 
     boolean fileExists(String absoluteFilePath);
 
+    boolean romExists(GameMetaData gameMetaData);
+
     List<String> readLinesFromFile(String filePath);
 
     void saveImageToDisk(BufferedImage image, GameMetaData gameMetaData);

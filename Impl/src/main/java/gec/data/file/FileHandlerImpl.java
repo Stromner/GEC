@@ -18,8 +18,10 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -56,6 +58,17 @@ public class FileHandlerImpl implements FileHandler {
     }
 
     @Override
+    // Not perfect but there should at most only be two files in any given folder, previewImage and rom
+    public boolean romExists(GameMetaData game) {
+        String fullPath = convertToPath(game);
+        String imagePath = fullPath + ImageHandler.IMAGE_NAME;
+        File romFolder = new File(fullPath);
+        return Arrays.stream(romFolder.listFiles()).map(File::getAbsolutePath).filter(Predicate.not(imagePath::equals))
+                .findAny()
+                .isPresent();
+    }
+
+    @Override
     public List<String> readLinesFromFile(String filePath) {
         URL url = this.getClass().getClassLoader().getResource(filePath);
         List<String> list = new ArrayList<>();
@@ -81,7 +94,7 @@ public class FileHandlerImpl implements FileHandler {
 
     @Override
     public void saveImageToDisk(BufferedImage image, GameMetaData game) {
-        String fullPath = prepareForSave(game);
+        String fullPath = convertToPath(game);
         String imagePath = fullPath + ImageHandler.IMAGE_NAME;
 
         File file = new File(fullPath);
@@ -99,7 +112,7 @@ public class FileHandlerImpl implements FileHandler {
 
     @Override
     public void saveRomToDisk(RomInfo romInfo, GameMetaData game) {
-        String fullPath = prepareForSave(game);
+        String fullPath = convertToPath(game);
         String romPath = fullPath + romInfo.getFileName();
 
         try {
@@ -133,7 +146,7 @@ public class FileHandlerImpl implements FileHandler {
         }
     }
 
-    private String prepareForSave(GameMetaData game) {
+    private String convertToPath(GameMetaData game) {
         // Remove illegal characters from game title
         game.setGameTitle(game.getGameTitle().replaceAll("[^a-zA-Z0-9.\\- ]", ""));
         String fullPath = rootPath + "/" + game.getConsole().getConsoleName() + "/" + game.getGameTitle() + "/";
