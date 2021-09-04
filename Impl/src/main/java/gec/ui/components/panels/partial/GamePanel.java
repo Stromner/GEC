@@ -1,7 +1,11 @@
 package gec.ui.components.panels.partial;
 
+import gec.core.ConsoleEnum;
 import gec.core.events.MenuChangeEvent;
+import gec.data.GameMetaData;
 import gec.data.console.ConsoleHandler;
+import gec.data.file.FileHandler;
+import gec.data.rom.crawler.RomManager;
 import gec.ui.components.elements.GECPanel;
 import gec.ui.components.elements.LoadingGlassPane;
 import gec.ui.layouts.RelativeLayout;
@@ -24,9 +28,14 @@ public class GamePanel extends GECPanel {
     private static final float EIGHTY_PCT = 80;
     @Autowired
     private ConsoleHandler consoleHandler;
+    @Autowired
+    private FileHandler fileHandler;
+    @Autowired
+    private RomManager romManager;
     private BufferedImage previewImage;
     private JLabel previewImageLabel;
     private List<String> gameList;
+    private JButton romButton;
 
     public void init() {
         gameList = consoleHandler.getGameList();
@@ -39,9 +48,13 @@ public class GamePanel extends GECPanel {
         if (this.isDisplayable()) { // TODO See if we can remove this if statement somehow
             LoadingGlassPane.getInstance().activate(this);
 
+            CompletableFuture.supplyAsync(() -> checkForRomOnDisk(event.getCurrentIndex()));
+
             CompletableFuture.supplyAsync(() -> {
                 previewImage = consoleHandler.getGamePreviewImage(gameList.get(event.getCurrentIndex()));
-                previewImageLabel.setIcon(new ImageIcon(ImageHelper.rescaleImage(previewImage, previewImageLabel.getWidth(), previewImageLabel.getHeight())));
+                previewImageLabel.setIcon(new ImageIcon(
+                        ImageHelper.rescaleImage(previewImage, previewImageLabel.getWidth(),
+                                previewImageLabel.getHeight())));
                 LoadingGlassPane.getInstance().deactivate();
                 return null;
             });
@@ -56,7 +69,7 @@ public class GamePanel extends GECPanel {
 
         createPreviewPanel();
         this.add(new JSeparator(SwingConstants.HORIZONTAL));
-        this.add(new GECPanel(), TWENTY_PCT); // TODO Code for "menu" below preview image
+        createSubMenu();
     }
 
     private void createPreviewPanel() {
@@ -90,5 +103,25 @@ public class GamePanel extends GECPanel {
         });
 
         this.add(previewPanel, EIGHTY_PCT);
+    }
+
+    private void createSubMenu() {
+        GECPanel subMenu = new GECPanel();
+        romButton = new JButton(); // TODO Probably want this as a custom element as it has to fire some code
+        subMenu.add(romButton);
+        this.add(subMenu, TWENTY_PCT);
+        checkForRomOnDisk(0);
+    }
+
+    private Void checkForRomOnDisk(Integer itemInList) {
+        ConsoleEnum console = ConsoleEnum.get(consoleHandler.getSelectedConsole());
+        GameMetaData game = new GameMetaData(gameList.get(itemInList), console);
+        if (fileHandler.romExists(game)) {
+            romButton.setText("PLAY");
+        } else {
+            romButton.setText("DOWNLOAD");
+        }
+
+        return null;
     }
 }

@@ -23,6 +23,11 @@ public class ConsoleHandlerImpl implements ConsoleHandler {
     private List<String> gameList;
 
     @Override
+    public String getSelectedConsole() {
+        return selectedConsole;
+    }
+
+    @Override
     public void selectConsole(String selectedConsole) {
         this.selectedConsole = selectedConsole;
         String gameListPath = selectedConsole + ".txt";
