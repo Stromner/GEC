@@ -66,6 +66,7 @@ public class FileHandlerImpl implements FileHandler {
         String imagePath = fullPath + ImageHandler.IMAGE_NAME;
         File romFolder = new File(fullPath);
         return Arrays.stream(romFolder.listFiles()).map(File::getAbsolutePath)
+                .map(string -> string.replace("\\", "/"))
                 .anyMatch(Predicate.not(imagePath::equals));
     }
 
