@@ -19,13 +19,13 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class TestCrawlerManagerImpl {
+public class TestRomManagerImpl {
     @Mock
     FileHandler fileHandler;
     @Mock
     RomsKingdomDotCom romsKingdomDotCom;
     @InjectMocks
-    CrawlerManagerImpl unitUnderTest;
+    RomManagerImpl unitUnderTest;
 
     @Test
     public void testFindUrls() throws IllegalAccessException, IOException, InterruptedException {

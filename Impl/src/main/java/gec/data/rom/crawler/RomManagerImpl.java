@@ -18,8 +18,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Component
-public class CrawlerManagerImpl implements CrawlerManager {
-    private static final Logger log = LoggerFactory.getLogger(CrawlerManagerImpl.class);
+public class RomManagerImpl implements RomManager {
+    private static final Logger log = LoggerFactory.getLogger(RomManagerImpl.class);
     @Autowired
     private FileHandler fileHandler;
     @Autowired
