@@ -4,6 +4,7 @@ import gec.core.ConsoleEnum;
 import gec.data.GameMetaData;
 import gec.data.image.ImageHandler;
 import gec.data.rom.crawler.RomInfo;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,6 +41,7 @@ public class FileHandlerImpl implements FileHandler {
                 .collect(Collectors.toList());
 
         createFolderStructure();
+        copyCacheToRoot();
     }
 
     @Override
@@ -63,9 +65,8 @@ public class FileHandlerImpl implements FileHandler {
         String fullPath = convertToPath(game);
         String imagePath = fullPath + ImageHandler.IMAGE_NAME;
         File romFolder = new File(fullPath);
-        return Arrays.stream(romFolder.listFiles()).map(File::getAbsolutePath).filter(Predicate.not(imagePath::equals))
-                .findAny()
-                .isPresent();
+        return Arrays.stream(romFolder.listFiles()).map(File::getAbsolutePath)
+                .anyMatch(Predicate.not(imagePath::equals));
     }
 
     @Override
@@ -143,6 +144,18 @@ public class FileHandlerImpl implements FileHandler {
         if (!dir.exists()) {
             log.debug("Creating folder at '{}'", path);
             dir.mkdirs();
+        }
+    }
+
+    private void copyCacheToRoot() {
+        File cacheFolder = new File(getClass().getClassLoader().getResource("precompiledCaches").getPath());
+        File rootFolder = new File(getRootPath());
+        try {
+            FileUtils.copyDirectory(cacheFolder, rootFolder);
+        } catch (IOException e) {
+            // TODO Nice error to ui? Return gracefully?
+            log.error("Could not copy caches from resources to root folder!");
+            e.printStackTrace();
         }
     }
 
