@@ -2,6 +2,7 @@ package gec.data.rom.crawler.sites;
 
 import gec.core.ConsoleEnum;
 import gec.data.rom.crawler.RomInfo;
+import gec.data.rom.crawler.SupportedSiteEnum;
 
 import java.io.IOException;
 
@@ -13,4 +14,6 @@ public interface RomPage {
     String findRomUrl(ConsoleEnum console, String gameTitle) throws IOException, InterruptedException;
 
     RomInfo downloadRom(String url) throws IOException;
+
+    SupportedSiteEnum getSiteEnum();
 }

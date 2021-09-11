@@ -6,6 +6,7 @@ import com.gargoylesoftware.htmlunit.util.NameValuePair;
 import gec.core.ConsoleEnum;
 import gec.data.file.FileHandler;
 import gec.data.rom.crawler.RomInfo;
+import gec.data.rom.crawler.SupportedSiteEnum;
 import info.debatty.java.stringsimilarity.RatcliffObershelp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -78,6 +79,11 @@ public class RomsKingdomDotCom extends AbstractSite implements RomPage {
         webClient.waitForBackgroundJavaScript(10000);
 
         return romInfo;
+    }
+
+    @Override
+    public SupportedSiteEnum getSiteEnum() {
+        return SupportedSiteEnum.ROMS_KINGDOM_DOT_COM;
     }
 
     private String extractFileName(List<NameValuePair> responseHeaders) {

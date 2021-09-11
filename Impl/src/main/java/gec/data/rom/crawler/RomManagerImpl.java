@@ -1,10 +1,11 @@
 package gec.data.rom.crawler;
 
-import gec.core.ConsoleEnum;
 import gec.data.GameMetaData;
 import gec.data.file.FileHandler;
 import gec.data.rom.crawler.sites.RomPage;
 import gec.data.rom.crawler.sites.RomsKingdomDotCom;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +27,17 @@ public class RomManagerImpl implements RomManager {
     private RomsKingdomDotCom romsKingdomDotCom;
 
     @Override
-    public List<String> findUrls(ConsoleEnum console, String gameTitle) throws IllegalAccessException {
-        List<CompletableFuture<String>> threads = new ArrayList<>();
+    public List<Pair<SupportedSiteEnum, String>> findUrls(GameMetaData game) {
+        List<CompletableFuture<Pair<SupportedSiteEnum, String>>> threads = new ArrayList<>();
         Field[] fields = this.getClass().getDeclaredFields();
         for (Field f : fields) {
             if (RomPage.class.isAssignableFrom(f.getType())) {
-                RomPage site = (RomPage) f.get(this);
                 threads.add(CompletableFuture.supplyAsync(() -> {
                     try {
-                        return site.findRomUrl(console, gameTitle);
-                    } catch (IOException | InterruptedException e) {
+                        RomPage site = (RomPage) f.get(this);
+                        return new ImmutablePair<>(site.getSiteEnum(),
+                                site.findRomUrl(game.getConsole(), game.getGameTitle()));
+                    } catch (IOException | InterruptedException | IllegalAccessException e) {
                         e.printStackTrace();
                         throw new RuntimeException("Could not get link!");
                         // TODO Nice error to UI? Ensure it crashes nicely (program can continue)?
@@ -44,19 +46,19 @@ public class RomManagerImpl implements RomManager {
             }
         }
 
-        return threads.stream().map(CompletableFuture::join).filter(url -> !url.isBlank()).collect(Collectors.toList());
+        return threads.stream().map(CompletableFuture::join).filter(pair -> !pair.getValue().isBlank())
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void downloadRom(ConsoleEnum console, String gameTitle, SupportedSiteEnum site, String url) {
-        GameMetaData metaData = new GameMetaData(gameTitle, console);
-        if (fileHandler.romExists(metaData)) {
+    public void downloadRom(GameMetaData game, SupportedSiteEnum site, String url) {
+        if (fileHandler.romExists(game)) {
             log.debug("rom already exists, returning...");
             return;
         }
         try {
             RomInfo romInfo = getSiteComponent(site).downloadRom(url);
-            fileHandler.saveRomToDisk(romInfo, metaData);
+            fileHandler.saveRomToDisk(romInfo, game);
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Could not download rom!");
