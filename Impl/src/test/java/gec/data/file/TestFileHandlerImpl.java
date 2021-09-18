@@ -11,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.awt.image.BufferedImage;
@@ -26,7 +25,7 @@ import java.util.Comparator;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith({SpringExtension.class, MockitoExtension.class})
+@ExtendWith({MockitoExtension.class})
 public class TestFileHandlerImpl {
     private static final String TEST_PATH = System.getProperty("user.dir") + "/target/" + System.currentTimeMillis();
     private GameMetaData testGame = new GameMetaData("TestGame", ConsoleEnum.NINTENDO_64);
