@@ -26,4 +26,12 @@ public class GameMetaData {
     public void setConsole(ConsoleEnum console) {
         this.console = console;
     }
+
+    @Override
+    public String toString() {
+        return "GameMetaData{" +
+                "gameTitle='" + gameTitle + '\'' +
+                ", console=" + console +
+                '}';
+    }
 }

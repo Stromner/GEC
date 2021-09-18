@@ -73,7 +73,7 @@ public abstract class AbstractSite {
             return masterList;
         }
 
-        log.debug("Cached site, returning cache");
+        log.debug("Cached site {}, returning cache", site);
         List<String> hrefs = (List<String>) diskCache.get(cacheName);
         diskCache.close();
         return hrefs;

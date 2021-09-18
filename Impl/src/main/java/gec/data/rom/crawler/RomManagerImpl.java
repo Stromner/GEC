@@ -45,6 +45,7 @@ public class RomManagerImpl implements RomManager {
 
     @Override
     public List<Pair<SupportedSiteEnum, String>> findUrls(GameMetaData game) {
+        log.debug("Finding urls for {}", game);
         List<CompletableFuture<Pair<SupportedSiteEnum, String>>> threads = new ArrayList<>();
         Field[] fields = this.getClass().getDeclaredFields();
         for (Field f : fields) {
