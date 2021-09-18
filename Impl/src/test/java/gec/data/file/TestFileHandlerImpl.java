@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.awt.image.BufferedImage;
@@ -25,7 +26,7 @@ import java.util.Comparator;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({SpringExtension.class, MockitoExtension.class})
 public class TestFileHandlerImpl {
     private static final String TEST_PATH = System.getProperty("user.dir") + "/target/" + System.currentTimeMillis();
     private GameMetaData testGame = new GameMetaData("TestGame", ConsoleEnum.NINTENDO_64);
@@ -38,6 +39,7 @@ public class TestFileHandlerImpl {
     public void init() {
         ReflectionTestUtils.setField(unitUnderTest, "rootPath", TEST_PATH);
         MockitoAnnotations.openMocks(this);
+        unitUnderTest.initFileStructure();
     }
 
     @AfterEach
@@ -50,7 +52,6 @@ public class TestFileHandlerImpl {
 
     @Test
     public void testCreateFileStructure() {
-        unitUnderTest.initFileStructure();
         Path rootPath = Path.of(unitUnderTest.getRootPath());
 
         // Verify root
@@ -65,8 +66,6 @@ public class TestFileHandlerImpl {
 
     @Test
     public void testSavePreviewImage() {
-        unitUnderTest.initFileStructure();
-
         unitUnderTest.saveImageToDisk(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), testGame);
 
         Path imagePath =
@@ -78,7 +77,6 @@ public class TestFileHandlerImpl {
     @Test
     public void testSavePreviewImage_IllegalCharacters() {
         GameMetaData game = new GameMetaData("50x15 - ¿QUIERE SER MILLONARIO?", ConsoleEnum.NINTENDO_64);
-        unitUnderTest.initFileStructure();
 
         unitUnderTest.saveImageToDisk(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), game);
 
@@ -89,8 +87,6 @@ public class TestFileHandlerImpl {
 
     @Test
     public void testSaveRom() {
-        unitUnderTest.initFileStructure();
-
         unitUnderTest.saveRomToDisk(testRomInfo, testGame);
 
         Path romPath =
@@ -101,8 +97,6 @@ public class TestFileHandlerImpl {
 
     @Test
     public void testRomExists_NoPreviewImage() {
-        unitUnderTest.initFileStructure();
-
         unitUnderTest.saveRomToDisk(testRomInfo, testGame);
 
         assertTrue(unitUnderTest.romExists(testGame));
@@ -110,8 +104,6 @@ public class TestFileHandlerImpl {
 
     @Test
     public void testRomExists_WithPreviewImage() {
-        unitUnderTest.initFileStructure();
-
         unitUnderTest.saveRomToDisk(testRomInfo, testGame);
         unitUnderTest.saveImageToDisk(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), testGame);
 
@@ -120,8 +112,6 @@ public class TestFileHandlerImpl {
 
     @Test
     public void testRomExists_EmptyFolder() {
-        unitUnderTest.initFileStructure();
-
         assertFalse(unitUnderTest.romExists(testGame));
     }
 }

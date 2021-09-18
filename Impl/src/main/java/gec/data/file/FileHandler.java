@@ -7,8 +7,6 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 
 public interface FileHandler {
-    void initFileStructure();
-
     String getRootPath();
 
     List<String> getConsoleList();

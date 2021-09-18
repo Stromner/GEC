@@ -40,6 +40,7 @@ public abstract class AbstractSite {
                     .hashMap(CACHE_DB)
                     .open();
         }
+        log.info("Cache loaded");
     }
 
     protected List<String> getHrefsForSite(String site, String cacheName) throws IOException, InterruptedException {

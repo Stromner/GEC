@@ -30,8 +30,6 @@ public class TitlePanel extends GECPanel {
 
     @PostConstruct
     private void init() {
-        fileHandler.initFileStructure();
-
         menu.init(defaultFontSize, selectedFontSize, fileHandler.getConsoleList(), SwingConstants.CENTER);
         setKeyBindings();
         this.add(menu);

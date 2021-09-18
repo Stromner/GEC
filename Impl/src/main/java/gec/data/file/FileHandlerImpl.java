@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -34,8 +35,9 @@ public class FileHandlerImpl implements FileHandler {
     private String rootPath;
     private List<String> consoleList;
 
-    @Override
-    public void initFileStructure() {
+    @PostConstruct
+        // Package visible for test purpose
+    void initFileStructure() {
         consoleList = Stream.of(ConsoleEnum.values())
                 .map(ConsoleEnum::getConsoleName)
                 .collect(Collectors.toList());

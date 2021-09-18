@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -25,6 +26,22 @@ public class RomManagerImpl implements RomManager {
     private FileHandler fileHandler;
     @Autowired
     private RomsKingdomDotCom romsKingdomDotCom;
+
+    @PostConstruct
+    private void init() {
+        Field[] fields = this.getClass().getDeclaredFields();
+        for (Field f : fields) {
+            if (RomPage.class.isAssignableFrom(f.getType())) {
+                try {
+                    RomPage site = (RomPage) f.get(this);
+                    site.initCache();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                    // TODO Nice error to UI?
+                }
+            }
+        }
+    }
 
     @Override
     public List<Pair<SupportedSiteEnum, String>> findUrls(GameMetaData game) {
