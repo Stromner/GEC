@@ -31,7 +31,7 @@ public class ContentPanel extends GECPanel {
     public void onConsoleSelectedEvent(ConsoleSelectedEvent event) {
         LoadingGlassPane.getInstance().activate(this);
 
-        CompletableFuture.supplyAsync(() -> {
+        CompletableFuture.runAsync(() -> {
             consoleHandler.selectConsole(event.getSelectedConsole());
 
             this.removeAll();
@@ -41,7 +41,6 @@ public class ContentPanel extends GECPanel {
             this.revalidate(); // Add new
 
             LoadingGlassPane.getInstance().deactivate();
-            return null;
         });
     }
 }
